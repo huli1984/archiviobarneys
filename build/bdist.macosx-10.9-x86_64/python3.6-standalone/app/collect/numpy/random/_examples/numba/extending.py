@@ -44,9 +44,9 @@ assert r1.shape == (n,)
 assert r1.shape == r2.shape
 
 t1 = timeit(numbacall, number=1000)
-print('{:.2f} secs for {} PCG64 (Numba/PCG64) gaussian randoms'.format(t1, n))
+#print('{:.2f} secs for {} PCG64 (Numba/PCG64) gaussian randoms'.format(t1, n))
 t2 = timeit(numpycall, number=1000)
-print('{:.2f} secs for {} PCG64 (NumPy/PCG64) gaussian randoms'.format(t2, n))
+#print('{:.2f} secs for {} PCG64 (NumPy/PCG64) gaussian randoms'.format(t2, n))
 
 # example 2
 
@@ -69,7 +69,7 @@ def bounded_uint(lb, ub, state):
     return lb + val
 
 
-print(bounded_uint(323, 2394691, ctypes_state.value))
+#print(bounded_uint(323, 2394691, ctypes_state.value))
 
 
 @nb.jit(nopython=True)

@@ -329,6 +329,7 @@ class Window3(QMainWindow):  # <===
                 self.update_widget()
             else:
                 if self.df.loc[self.df.CodiceProdotto == text].any().any():
+                    #print("codice prodotto in positive:", text, "tipo di dato", type(text), "\n____\nmatch in database:", self.df.CodiceProdotto, "\n_____\ntipo di dato:", type(self.df.CodiceProdotto))
                     self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] = self.df.loc[
                                                                                     self.df.CodiceProdotto == text, 'QtaNegozio'] - 1
                     if int(self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio']) <= 0:
@@ -350,7 +351,7 @@ class Window3(QMainWindow):  # <===
                     self.df.to_csv(self.mac_file_path, index=False)
                     self.update_widget()
                 else:
-                    #print("codice prodotto da cambiare:", text)
+                    #print("codice prodotto da cambiare:", text, "tipo di dato", type(text))
                     pass
 
     def load_csv(self):
@@ -364,9 +365,15 @@ class Window3(QMainWindow):  # <===
 
     def create_db(self):
         if not os.path.isfile(self.mac_file_path):
+            data_list = ["#", "initialization row", "no", 0, 0, 0,
+                         "N/A",
+                         "N/A", "N/A", "N/A"]
             index_list = ["CodiceProdotto", "Nome", "Descrizione", "QtTotale", "QtaMagazzino", "QtaNegozio", "Taglia",
                           "Colore", "Hex", "Data"]
+
             df = pd.DataFrame(columns=index_list)
+            a_series = pd.Series(data_list, index=self.df.columns)
+            df = df.append(a_series, ignore_index=True)
             df.to_csv(self.mac_file_path, index=False)
             #print("initialization dir:" + self.mac_file_path)
             return df
@@ -417,9 +424,15 @@ color: #777777;"""
 
     def create_db(self):
         if not os.path.isfile(self.mac_file_path):
+            data_list = ["#", "initialization row", "no", 0, 0, 0,
+                         "N/A",
+                         "N/A", "N/A", "N/A"]
             index_list = ["CodiceProdotto", "Nome", "Descrizione", "QtTotale", "QtaMagazzino", "QtaNegozio", "Taglia",
                           "Colore", "Hex", "Data"]
+
             df = pd.DataFrame(columns=index_list)
+            a_series = pd.Series(data_list, index=df.columns)
+            df = df.append(a_series, ignore_index=True)
             df.to_csv(self.mac_file_path, index=False)
             #print("initialization dir:" + self.mac_file_path)
         else:
