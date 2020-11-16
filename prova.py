@@ -1,4 +1,3 @@
-import csv
 import os
 import sys
 from datetime import date
@@ -113,25 +112,25 @@ class Window2(QDialog):
         layout.addWidget(self.qtamagazzino, 3, 5)
         taglia = QtWidgets.QLabel("Taglia")
         layout.addWidget(taglia, 4, 0)
-        self.tag = QtWidgets.QComboBox()
-        self.tag.addItem("XS")
+        self.tag = QtWidgets.QLineEdit()
+        layout.addWidget(self.tag, 4, 1)
+        '''self.tag.addItem("XS")
         self.tag.addItem("S")
         self.tag.addItem("M")
         self.tag.addItem("L")
         self.tag.addItem("XL")
-        self.tag.addItem("XXL")
+        self.tag.addItem("XXL")'''
 
         self.df = self.load_csv()
 
-        layout.addWidget(self.tag, 4, 1)
 
         colore = QtWidgets.QLabel("Colore")
         layout.addWidget(colore, 4, 2)
-        self.col = QtWidgets.QComboBox()
-        self.col.addItem("Bianco", "#ffffff")
+        self.col = QtWidgets.QLineEdit()
+        '''self.col.addItem("Bianco", "#ffffff")
         self.col.addItem("Rosso", "#ff0000")
         self.col.addItem("Verde", "#00ff00")
-        self.col.addItem("Blu", "#0000ff")
+        self.col.addItem("Blu", "#0000ff")'''
 
         layout.addWidget(self.col, 4, 3)
 
@@ -181,9 +180,9 @@ class Window2(QDialog):
         qtatotprodotto = self.qtatotale.text()
         qtanegprodotto = self.qtanegozio.text()
         qtamagprodotto = self.qtamagazzino.text()
-        tagliaprodotto = self.tag.currentText()
-        coloreprodotto = self.col.currentText()
-        hexprodotto = self.col.currentData()
+        tagliaprodotto = self.tag.text()
+        coloreprodotto = self.col.text()
+        hexprodotto = '' #self.col.text()
         dataprodotto = date.today()
 
         data_list = [codiceprodotto, nomeprodotto, descprodotto, qtatotprodotto, qtamagprodotto, qtanegprodotto,
