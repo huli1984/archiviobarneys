@@ -1,6 +1,9 @@
 import os
 import sys
+import time
+import datetime
 from datetime import date
+from threading import Thread
 
 import pandas as pd
 from PyQt5 import QtCore, QtWidgets
@@ -37,8 +40,14 @@ class Window2(QDialog):
     def __init__(self):
         super().__init__()
 
+        today = str(datetime.datetime.today().strftime("%Y-%b-%d"))
+        today = "ReportGiornaliero/" + today
+        self.mac_daily_folder = os.path.abspath(
+            os.path.join(sys.executable + "ReportGiornaliero/", "..", '..', '..', "ReportGiornaliero/"))
+        self.mac_daily_path = os.path.abspath(
+            os.path.join(sys.executable + today + "_prodotti.csv", "..", '..', '..', '..', today + "_prodotti.csv"))
         self.mac_file_path = os.path.abspath(
-            os.path.join(sys.executable + "/prodotti.csv", '..', "..", "..",
+            os.path.join(sys.executable + "/prodotti.csv", '..', '..', '..', "..", "..",
                          "prodotti.csv"))
         #print(self.mac_file_path)
         self.df = None
@@ -74,9 +83,6 @@ class Window2(QDialog):
             df.append(to_add_series, ignore_index=True)
             df.to_csv(self.mac_file_path)
             #print("initialization dir:" + self.mac_file_path)
-
-    def check_existence(self, text=None):
-        pass
 
     def createGridLayout(self):
         self.horizontalGroupBox = QGroupBox("Inserisci un prodotto")
@@ -114,12 +120,6 @@ class Window2(QDialog):
         layout.addWidget(taglia, 4, 0)
         self.tag = QtWidgets.QLineEdit()
         layout.addWidget(self.tag, 4, 1)
-        '''self.tag.addItem("XS")
-        self.tag.addItem("S")
-        self.tag.addItem("M")
-        self.tag.addItem("L")
-        self.tag.addItem("XL")
-        self.tag.addItem("XXL")'''
 
         self.df = self.load_csv()
 
@@ -127,10 +127,6 @@ class Window2(QDialog):
         colore = QtWidgets.QLabel("Colore")
         layout.addWidget(colore, 4, 2)
         self.col = QtWidgets.QLineEdit()
-        '''self.col.addItem("Bianco", "#ffffff")
-        self.col.addItem("Rosso", "#ff0000")
-        self.col.addItem("Verde", "#00ff00")
-        self.col.addItem("Blu", "#0000ff")'''
 
         layout.addWidget(self.col, 4, 3)
 
@@ -154,7 +150,7 @@ class Window2(QDialog):
         if data[4].isdigit():
             df.loc[df.CodiceProdotto == text, 'QtaMagazzino'] = int(df.loc[df.CodiceProdotto == text, 'QtaMagazzino']) + int(data[4])
         else:
-            #print("not matching int")
+            print("not matching int")
             pass
         #print(df)
         return df
@@ -162,10 +158,43 @@ class Window2(QDialog):
     def load_csv(self):
         try:
             df = pd.read_csv(self.mac_file_path)
+            try:
+                daily_df = pd.read_csv(self.mac_daily_path)
+            except Exception as e:
+                print(e)
+                daily_df = self.create_daily_db()
+            # print(df)
+            self.daily_df = daily_df
             return df
         except FileNotFoundError as e:
             df = self.create_db()
+            try:
+                daily_df = pd.read_csv(self.mac_daily_path)
+            except Exception as e:
+                print(e)
+                daily_df = self.create_daily_db()
+            self.daily_df = daily_df
             return df
+
+    def create_daily_db(self):
+        data_list = ["#", "initialization row", "no", 0, 0, 0,
+                     "N/A",
+                     "N/A", "N/A", "N/A"]
+        index_list = ["CodiceProdotto", "Nome", "Descrizione", "QtTotale", "QtaMagazzino", "QtaNegozio", "Taglia",
+                      "Colore", "Hex", "Data"]
+
+        df = pd.DataFrame(columns=index_list)
+        a_series = pd.Series(data_list, index=index_list)
+        df = df.append(a_series, ignore_index=True)
+        try:
+            df.to_csv(self.mac_daily_path, index=False)
+        except Exception as e:
+            print(self.mac_daily_folder)
+            if os.path.isdir(self.mac_daily_folder):
+                df.to_csv(self.mac_daily_path, index=False)
+            else:
+                os.mkdir(self.mac_daily_folder, 0o755)
+                df.to_csv(self.mac_daily_path, index=False)
 
     @staticmethod
     def append_my_df(df1, df2):
@@ -175,6 +204,7 @@ class Window2(QDialog):
     def buttonOK_clicked(self):
         # printing the form information
         codiceprodotto = self.codiceprod.toPlainText()
+        print("codice prodotto", codiceprodotto)
         nomeprodotto = self.nomeprod.text()
         descprodotto = self.descprod.toPlainText()
         qtatotprodotto = self.qtatotale.text()
@@ -215,11 +245,118 @@ class Window2(QDialog):
         self.close()
 
 
+class WindowDailyReport(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.daily_df = None
+        today = str(datetime.datetime.today().strftime("%Y-%b-%d"))
+        today = "ReportGiornaliero/" + today
+        self.mac_daily_folder = os.path.abspath(
+            os.path.join(sys.executable + "ReportGiornaliero/", "..", '..', '..', "ReportGiornaliero/"))
+        self.mac_daily_path = os.path.abspath(
+            os.path.join(sys.executable + today + "_prodotti.csv", "..", '..', '..', '..', today + "_prodotti.csv"))
+        print(self.mac_daily_path)
+
+        self.title = "Report Giornaliero " + str(datetime.datetime.today().strftime("%Y-%m-%d"))
+        self.top = 200
+        self.left = 200
+        self.width = 1120
+        self.height = 900
+        self.df = self.load_daily_csv()
+
+        self.pandas_table = self.create_table()
+        self.pandas_table.setGeometry(30, 30, 1020, 850)
+        self.pandas_table.setBaseSize(1020, 850)
+
+        self.setWindowTitle("Report Giornaliero " + str(datetime.datetime.today().strftime("%Y-%m-%d")))
+
+        self.wid = QtWidgets.QWidget()
+        self.setCentralWidget(self.wid)
+        self.layout = QtWidgets.QVBoxLayout()
+        self.layout.addWidget(self.pandas_table)
+        self.wid.setLayout(self.layout)
+
+    def load_daily_csv(self):
+        try:
+            daily_df = pd.read_csv(self.mac_daily_path)
+            self.daily_df = daily_df
+            return daily_df
+        except Exception as e:
+            print(e)
+            daily_df = self.create_daily_db()
+            self.daily_df = daily_df
+            return daily_df
+
+    def create_daily_db(self):
+        data_list = ["#", "initialization row", "no", 0, 0, 0,
+                     "N/A",
+                     "N/A", "N/A", "N/A"]
+        index_list = ["CodiceProdotto", "Nome", "Descrizione", "QtTotale", "QtaMagazzino", "QtaNegozio", "Taglia",
+                      "Colore", "Hex", "Data"]
+
+        df = pd.DataFrame(columns=index_list)
+        a_series = pd.Series(data_list, index=index_list)
+        df = df.append(a_series, ignore_index=True)
+        self.daily_df = df
+
+        try:
+            df.to_csv(self.mac_daily_path, index=False)
+        except Exception as e:
+            print(self.mac_daily_folder)
+            if os.path.isdir(self.mac_daily_folder):
+                df.to_csv(self.mac_daily_path, index=False)
+            else:
+                os.mkdir(self.mac_daily_folder, 0o755)
+                df.to_csv(self.mac_daily_path, index=False)
+        return df
+
+    def create_table(self):
+        # create the view
+        tv = QTableView()
+
+        # set the table model
+        tablemodel = PandasTable(self.load_daily_csv())
+        tv.setModel(tablemodel)
+        tv.setBaseSize(995, 800)
+        # hide grid
+        tv.setShowGrid(False)
+
+        vh = tv.verticalHeader()
+        vh.setVisible(True)
+
+        # set horizontal header properties
+        hh = tv.horizontalHeader()
+        hh.setStretchLastSection(True)
+
+        # set column width to fit contents
+        # tv.resizeColumnsToContents()
+
+        # set row height
+        tv.resizeRowsToContents()
+
+        # enable sorting
+        tv.setSortingEnabled(False)
+
+        return tv
+
+
 class Window3(QMainWindow):  # <===
     def __init__(self):
         super().__init__()
+
+        self.daily_df = None
+
         self.mac_file_path = os.path.abspath(
-            os.path.join(sys.executable + "/prodotti.csv", "..", '..', '..', "prodotti.csv"))
+            os.path.join(sys.executable + "/prodotti.csv", "..", '..', '..', '..', '..', "prodotti.csv"))
+
+        today = str(datetime.datetime.today().strftime("%Y-%b-%d"))
+        today = "ReportGiornaliero/" + today
+        self.mac_daily_folder = os.path.abspath(
+            os.path.join(sys.executable + "ReportGiornaliero/", "..", '..', '..', "ReportGiornaliero/"))
+        self.mac_daily_path = os.path.abspath(
+            os.path.join(sys.executable + today + "_prodotti.csv", "..", '..', '..', '..', today + "_prodotti.csv"))
+        print(self.mac_daily_path)
 
         self.setWindowTitle("Cerca prodotti")
         self.title = "Cerca Prodotto"
@@ -252,6 +389,10 @@ class Window3(QMainWindow):  # <===
         self.wid.setLayout(self.layout)
         self.line_edit.setMinimumSize(800, 30)
         self.line_edit.setMaximumSize(1020, 30)
+        self.daily_table = QPushButton("Report Giornaliero", self)
+
+        self.daily_table.setGeometry(950, 10, 150, 30)
+        self.daily_table.clicked.connect(self.windowDailyReport)
 
         if self.line_edit is None:
             self.line_edit.textChanged.connect(lambda what=None: self.check_existence(None))
@@ -328,13 +469,19 @@ class Window3(QMainWindow):  # <===
                 self.update_widget()
             else:
                 if self.df.loc[self.df.CodiceProdotto == text].any().any():
-                    #print("codice prodotto in positive:", text, "tipo di dato", type(text), "\n____\nmatch in database:", self.df.CodiceProdotto, "\n_____\ntipo di dato:", type(self.df.CodiceProdotto))
+
                     self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] = self.df.loc[
                                                                                     self.df.CodiceProdotto == text, 'QtaNegozio'] - 1
-                    if int(self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio']) <= 0:
+                    if int(self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio']) < 1:
                         self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] = 0
                         '''attivare alert'''
                         QMessageBox.about(self, "ATTENZIONE", "prodotto " + text + " esaurito in negozio")
+                        print(self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'])
+                        # salva riga con alert (e prodotto relativo) in daily report
+                        self.update_daily(self.df.loc[self.df.CodiceProdotto == text, 'CodiceProdotto'],
+                                          self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'],
+                                          self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'],
+                                          self.df, self.df.index[self.df.CodiceProdotto == text])
 
                     self.df.loc[self.df.CodiceProdotto == text, 'QtTotale'] = self.df.loc[
                                                                                   self.df.CodiceProdotto == text, 'QtTotale'] - 1
@@ -347,6 +494,7 @@ class Window3(QMainWindow):  # <===
 
                     pd.set_option('display.max_columns', None)
                     # #print(self.df)
+
                     self.df.to_csv(self.mac_file_path, index=False)
                     self.update_widget()
                 else:
@@ -356,11 +504,51 @@ class Window3(QMainWindow):  # <===
     def load_csv(self):
         try:
             df = pd.read_csv(self.mac_file_path)
-            #print(df)
+            try:
+                daily_df = pd.read_csv(self.mac_daily_path)
+            except Exception as e:
+                print(e)
+                daily_df = self.create_daily_db()
+            self.daily_df = daily_df
             return df
         except FileNotFoundError as e:
             df = self.create_db()
+            try:
+                daily_df = pd.read_csv(self.mac_daily_path)
+            except Exception as e:
+                print(e)
+                daily_df = self.create_daily_db()
+            self.daily_df = daily_df
             return df
+
+    def create_daily_db(self):
+        data_list = ["#", "initialization row", "no", 0, 0, 0,
+                     "N/A",
+                     "N/A", "N/A", "N/A"]
+        index_list = ["CodiceProdotto", "Nome", "Descrizione", "QtTotale", "QtaMagazzino", "QtaNegozio", "Taglia",
+                      "Colore", "Hex", "Data"]
+
+        df = pd.DataFrame(columns=index_list)
+        a_series = pd.Series(data_list, index=index_list)
+        df = df.append(a_series, ignore_index=True)
+        self.daily_df = df
+
+        try:
+            df.to_csv(self.mac_daily_path, index=False)
+        except Exception as e:
+            print(self.mac_daily_folder)
+            if os.path.isdir(self.mac_daily_folder):
+                df.to_csv(self.mac_daily_path, index=False)
+            else:
+                os.mkdir(self.mac_daily_folder, 0o755)
+                df.to_csv(self.mac_daily_path, index=False)
+
+    def update_daily(self, codice_prodotto, qta_negozio, qta_magazzino, df, index):
+        print("cod Prod ", codice_prodotto, "\n", "Qt Neg", qta_negozio, "\n", "Qt Mag", qta_magazzino)
+        zero_series = df.iloc[index].squeeze()
+        self.daily_df = self.daily_df.append(zero_series, ignore_index=True)
+        self.daily_df.drop_duplicates(subset="CodiceProdotto", inplace=True)
+        self.daily_df.to_csv(self.mac_daily_path, index=False)
 
     def create_db(self):
         if not os.path.isfile(self.mac_file_path):
@@ -380,6 +568,12 @@ class Window3(QMainWindow):  # <===
             #print("csv exists", self.mac_file_path)
             pass
 
+    def windowDailyReport(self):  # <===
+        self.w = WindowDailyReport()
+        self.w.setWindowTitle(self.w.title)
+        self.w.setGeometry(self.w.top, self.w.left, self.w.width, self.w.height)
+        self.w.show()
+
     @QtCore.pyqtSlot()
     def on_pushButtonLoad_clicked(self):
         self.df = self.load_csv()
@@ -397,7 +591,7 @@ class Window(QMainWindow):
         self.height = 500
 
         self.mac_file_path = os.path.abspath(
-            os.path.join(sys.executable + "/prodotti.csv", "..", '..', '..', "prodotti.csv"))
+            os.path.join(sys.executable + "/prodotti.csv", "..", '..', '..', '..', '..', "prodotti.csv"))
 
         self.pushButton = QPushButton("Inserisci", self)
         styles = """background-color: orange;
