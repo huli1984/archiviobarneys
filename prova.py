@@ -43,9 +43,9 @@ class Window2(QDialog):
         today = str(datetime.datetime.today().strftime("%Y-%b-%d"))
         today = "ReportGiornaliero/" + today
         self.mac_daily_folder = os.path.abspath(
-            os.path.join(sys.executable + "ReportGiornaliero/", "..", '..', '..', "ReportGiornaliero/"))
+            os.path.join(sys.executable + "ReportGiornaliero/", "..", '..', "..", '..', "ReportGiornaliero/"))
         self.mac_daily_path = os.path.abspath(
-            os.path.join(sys.executable + today + "_prodotti.csv", "..", '..', '..', '..', today + "_prodotti.csv"))
+            os.path.join(sys.executable + today + "_prodotti.csv", "..", '..', '..', '..', '..', today + "_prodotti.csv"))
         self.mac_file_path = os.path.abspath(
             os.path.join(sys.executable + "/prodotti.csv", '..', '..', '..', "..", "..",
                          "prodotti.csv"))
@@ -253,9 +253,9 @@ class WindowDailyReport(QMainWindow):
         today = str(datetime.datetime.today().strftime("%Y-%b-%d"))
         today = "ReportGiornaliero/" + today
         self.mac_daily_folder = os.path.abspath(
-            os.path.join(sys.executable + "ReportGiornaliero/", "..", '..', '..', "ReportGiornaliero/"))
+            os.path.join(sys.executable + "ReportGiornaliero/", "..", "..", '..', '..', "ReportGiornaliero/"))
         self.mac_daily_path = os.path.abspath(
-            os.path.join(sys.executable + today + "_prodotti.csv", "..", '..', '..', '..', today + "_prodotti.csv"))
+            os.path.join(sys.executable + today + "_prodotti.csv", "..", "..", '..', '..', '..', today + "_prodotti.csv"))
         print(self.mac_daily_path)
 
         self.title = "Report Giornaliero " + str(datetime.datetime.today().strftime("%Y-%m-%d"))
@@ -268,7 +268,6 @@ class WindowDailyReport(QMainWindow):
         self.pandas_table = self.create_table()
         self.pandas_table.setGeometry(30, 30, 1020, 850)
         self.pandas_table.setBaseSize(1020, 850)
-
         self.setWindowTitle("Report Giornaliero " + str(datetime.datetime.today().strftime("%Y-%m-%d")))
 
         self.wid = QtWidgets.QWidget()
@@ -337,7 +336,6 @@ class WindowDailyReport(QMainWindow):
 
         # enable sorting
         tv.setSortingEnabled(False)
-
         return tv
 
 
@@ -353,9 +351,9 @@ class Window3(QMainWindow):  # <===
         today = str(datetime.datetime.today().strftime("%Y-%b-%d"))
         today = "ReportGiornaliero/" + today
         self.mac_daily_folder = os.path.abspath(
-            os.path.join(sys.executable + "ReportGiornaliero/", "..", '..', '..', "ReportGiornaliero/"))
+            os.path.join(sys.executable + "ReportGiornaliero/", "..", "..", '..', '..', "ReportGiornaliero/"))
         self.mac_daily_path = os.path.abspath(
-            os.path.join(sys.executable + today + "_prodotti.csv", "..", '..', '..', '..', today + "_prodotti.csv"))
+            os.path.join(sys.executable + today + "_prodotti.csv", "..", "..", '..', '..', '..', today + "_prodotti.csv"))
         print(self.mac_daily_path)
 
         self.setWindowTitle("Cerca prodotti")
@@ -595,12 +593,12 @@ class Window(QMainWindow):
 
         self.pushButton = QPushButton("Inserisci", self)
         styles = """background-color: orange;
-border-style: outset;
-border-width: 2px;
-border-radius: 15px;
-border-color: #777777;
-padding: 4px;
-color: #777777;"""
+                    border-style: outset;
+                    border-width: 2px;
+                    border-radius: 15px;
+                    border-color: #777777;
+                    padding: 4px;
+                    color: #777777;"""
         self.pushButton.setStyleSheet(styles)
         self.pushButton.move(160, 200)
         self.pushButton.setToolTip("<h3>Inserisci</h3>")
