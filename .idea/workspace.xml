@@ -19,8 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7faee735-b179-4f6c-916e-904eb5cccf39" name="Default Changelist" comment="Fixed the missing match with equal strings giving the first row a hash symbol.&#10;TODO: investigate more about the bug for a final fix&#10;ADDED: daily report + daily report csvs saved in folder&#10;&#10;SOLVED: removed combo box for color and size">
-      <change beforePath="$PROJECT_DIR$/.idea/prog.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/prog.iml" afterDir="false" />
+    <list default="true" id="7faee735-b179-4f6c-916e-904eb5cccf39" name="Default Changelist" comment="TODO: fix bug about report giornaliero button (now window must be restarted to open it)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/prova.py" beforeDir="false" afterPath="$PROJECT_DIR$/prova.py" afterDir="false" />
     </list>
@@ -125,7 +124,8 @@
       <workItem from="1606754992695" duration="317000" />
       <workItem from="1606756452919" duration="602000" />
       <workItem from="1606955165347" duration="18000" />
-      <workItem from="1607012921071" duration="1574000" />
+      <workItem from="1607012921071" duration="1663000" />
+      <workItem from="1607015943472" duration="611000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed the missing match with equal strings giving the first row a hash symbol.&#10;TODO: investigate more about the bug for a final fix">
       <created>1605211019472</created>
@@ -162,7 +162,14 @@
       <option name="project" value="LOCAL" />
       <updated>1606756499172</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="TODO: fix bug about report giornaliero button (now window must be restarted to open it)">
+      <created>1607015563749</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1607015563749</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -184,7 +191,8 @@
     <MESSAGE value="Fixed the missing match with equal strings giving the first row a hash symbol.&#10;TODO: investigate more about the bug for a final fix" />
     <MESSAGE value="Fixed the missing match with equal strings giving the first row a hash symbol.&#10;TODO: investigate more about the bug for a final fix&#10;&#10;SOLVED: removed combo box for color and size" />
     <MESSAGE value="Fixed the missing match with equal strings giving the first row a hash symbol.&#10;TODO: investigate more about the bug for a final fix&#10;ADDED: daily report + daily report csvs saved in folder&#10;&#10;SOLVED: removed combo box for color and size" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed the missing match with equal strings giving the first row a hash symbol.&#10;TODO: investigate more about the bug for a final fix&#10;ADDED: daily report + daily report csvs saved in folder&#10;&#10;SOLVED: removed combo box for color and size" />
+    <MESSAGE value="TODO: fix bug about report giornaliero button (now window must be restarted to open it)" />
+    <option name="LAST_COMMIT_MESSAGE" value="TODO: fix bug about report giornaliero button (now window must be restarted to open it)" />
   </component>
   <component name="WindowStateProjectService">
     <state x="328" y="184" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1605558898784">
@@ -200,37 +208,37 @@
       <screen x="0" y="23" width="1920" height="1005" />
     </state>
     <state x="636" y="274" key="Github.UntrackedFilesDialog/0.23.1920.1005@0.23.1920.1005" timestamp="1605207408701" />
-    <state width="1865" height="265" key="GridCell.Tab.0.bottom" timestamp="1606755310622">
+    <state width="1865" height="265" key="GridCell.Tab.0.bottom" timestamp="1607016555090">
       <screen x="0" y="23" width="1920" height="1002" />
     </state>
-    <state width="1865" height="265" key="GridCell.Tab.0.bottom/0.23.1920.1002@0.23.1920.1002" timestamp="1606755310622" />
+    <state width="1865" height="265" key="GridCell.Tab.0.bottom/0.23.1920.1002@0.23.1920.1002" timestamp="1607016555090" />
     <state width="1865" height="265" key="GridCell.Tab.0.bottom/0.23.1920.1003@0.23.1920.1003" timestamp="1606691942616" />
     <state width="1865" height="265" key="GridCell.Tab.0.bottom/0.23.1920.1004@0.23.1920.1004" timestamp="1606695132078" />
     <state width="1865" height="265" key="GridCell.Tab.0.bottom/0.23.1920.1005@0.23.1920.1005" timestamp="1606693275778" />
     <state width="1685" height="271" key="GridCell.Tab.0.bottom/0.23.1920.1006@0.23.1920.1006" timestamp="1605114853047" />
     <state width="1685" height="270" key="GridCell.Tab.0.bottom/0.23.1920.997@0.23.1920.997" timestamp="1603399329341" />
-    <state width="1865" height="265" key="GridCell.Tab.0.center" timestamp="1606755310621">
+    <state width="1865" height="265" key="GridCell.Tab.0.center" timestamp="1607016555089">
       <screen x="0" y="23" width="1920" height="1002" />
     </state>
-    <state width="1865" height="265" key="GridCell.Tab.0.center/0.23.1920.1002@0.23.1920.1002" timestamp="1606755310621" />
+    <state width="1865" height="265" key="GridCell.Tab.0.center/0.23.1920.1002@0.23.1920.1002" timestamp="1607016555089" />
     <state width="1865" height="265" key="GridCell.Tab.0.center/0.23.1920.1003@0.23.1920.1003" timestamp="1606691942615" />
     <state width="1865" height="265" key="GridCell.Tab.0.center/0.23.1920.1004@0.23.1920.1004" timestamp="1606695132077" />
     <state width="1865" height="265" key="GridCell.Tab.0.center/0.23.1920.1005@0.23.1920.1005" timestamp="1606693275778" />
     <state width="1685" height="271" key="GridCell.Tab.0.center/0.23.1920.1006@0.23.1920.1006" timestamp="1605114853046" />
     <state width="1685" height="270" key="GridCell.Tab.0.center/0.23.1920.997@0.23.1920.997" timestamp="1603399329340" />
-    <state width="1865" height="265" key="GridCell.Tab.0.left" timestamp="1606755310621">
+    <state width="1865" height="265" key="GridCell.Tab.0.left" timestamp="1607016555089">
       <screen x="0" y="23" width="1920" height="1002" />
     </state>
-    <state width="1865" height="265" key="GridCell.Tab.0.left/0.23.1920.1002@0.23.1920.1002" timestamp="1606755310621" />
+    <state width="1865" height="265" key="GridCell.Tab.0.left/0.23.1920.1002@0.23.1920.1002" timestamp="1607016555089" />
     <state width="1865" height="265" key="GridCell.Tab.0.left/0.23.1920.1003@0.23.1920.1003" timestamp="1606691942615" />
     <state width="1865" height="265" key="GridCell.Tab.0.left/0.23.1920.1004@0.23.1920.1004" timestamp="1606695132077" />
     <state width="1865" height="265" key="GridCell.Tab.0.left/0.23.1920.1005@0.23.1920.1005" timestamp="1606693275777" />
     <state width="1685" height="271" key="GridCell.Tab.0.left/0.23.1920.1006@0.23.1920.1006" timestamp="1605114853045" />
     <state width="1685" height="270" key="GridCell.Tab.0.left/0.23.1920.997@0.23.1920.997" timestamp="1603399329339" />
-    <state width="1865" height="265" key="GridCell.Tab.0.right" timestamp="1606755310622">
+    <state width="1865" height="265" key="GridCell.Tab.0.right" timestamp="1607016555090">
       <screen x="0" y="23" width="1920" height="1002" />
     </state>
-    <state width="1865" height="265" key="GridCell.Tab.0.right/0.23.1920.1002@0.23.1920.1002" timestamp="1606755310622" />
+    <state width="1865" height="265" key="GridCell.Tab.0.right/0.23.1920.1002@0.23.1920.1002" timestamp="1607016555090" />
     <state width="1865" height="265" key="GridCell.Tab.0.right/0.23.1920.1003@0.23.1920.1003" timestamp="1606691942615" />
     <state width="1865" height="265" key="GridCell.Tab.0.right/0.23.1920.1004@0.23.1920.1004" timestamp="1606695132077" />
     <state width="1865" height="265" key="GridCell.Tab.0.right/0.23.1920.1005@0.23.1920.1005" timestamp="1606693275778" />
@@ -268,9 +276,10 @@
       <screen x="0" y="23" width="1920" height="1005" />
     </state>
     <state x="465" y="193" key="SettingsEditor/0.23.1920.1005@0.23.1920.1005" timestamp="1605207135929" />
-    <state x="593" y="264" key="Vcs.Push.Dialog.v2" timestamp="1606756504580">
-      <screen x="0" y="23" width="1920" height="1005" />
+    <state x="593" y="263" key="Vcs.Push.Dialog.v2" timestamp="1607015566290">
+      <screen x="0" y="23" width="1920" height="1002" />
     </state>
+    <state x="593" y="263" key="Vcs.Push.Dialog.v2/0.23.1920.1002@0.23.1920.1002" timestamp="1607015566290" />
     <state x="593" y="264" key="Vcs.Push.Dialog.v2/0.23.1920.1004@0.23.1920.1004" timestamp="1605211022567" />
     <state x="593" y="264" key="Vcs.Push.Dialog.v2/0.23.1920.1005@0.23.1920.1005" timestamp="1606756504580" />
     <state x="593" y="264" key="Vcs.Push.Dialog.v2/0.23.1920.1006@0.23.1920.1006" timestamp="1605561277640" />
@@ -328,6 +337,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/prog$prog_prova.coverage" NAME="prog_prova Coverage Results" MODIFIED="1605210738581" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/prog$python.coverage" NAME="python Coverage Results" MODIFIED="1606755113398" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/prog$python.coverage" NAME="python Coverage Results" MODIFIED="1607016389054" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

@@ -203,7 +203,8 @@ class Window2(QDialog):
     @QtCore.pyqtSlot()
     def buttonOK_clicked(self):
         # printing the form information
-        codiceprodotto = self.codiceprod.toPlainText()
+
+        codiceprodotto = self.codiceprod.toPlainText().strip()
         print("codice prodotto", codiceprodotto)
         nomeprodotto = self.nomeprod.text()
         descprodotto = self.descprod.toPlainText()
