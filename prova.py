@@ -4,6 +4,7 @@ import time
 import datetime
 from datetime import date
 from threading import Thread
+from pynput.keyboard import Key, Controller
 
 import pandas as pd
 from PyQt5 import QtCore, QtWidgets
@@ -19,10 +20,16 @@ class PandasTable(QAbstractTableModel):
         self._df = df
 
     def rowCount(self, parent=None):
-        return self._df.shape[0]
+        try:
+            return self._df.shape[0]
+        except IndexError as e:
+            return 1
 
     def columnCount(self, parent=None):
-        return self._df.shape[1]
+        try:
+            return self._df.shape[1]
+        except IndexError as e:
+            return 1
 
     def data(self, index, role=Qt.DisplayRole):
         if index.isValid():
@@ -34,7 +41,7 @@ class PandasTable(QAbstractTableModel):
             return self._df.columns[col]
         return None
 
-
+'''Classe finestra inserimento'''
 class Window2(QDialog):
 
     def __init__(self):
@@ -49,7 +56,7 @@ class Window2(QDialog):
         self.mac_file_path = os.path.abspath(
             os.path.join(sys.executable + "/prodotti.csv", '..', '..', '..', "..", "..",
                          "prodotti.csv"))
-        #print(self.mac_file_path)
+
         self.df = None
         self.title = "Inserisci Prodotto"
         self.top = 100
@@ -91,38 +98,49 @@ class Window2(QDialog):
         layout.setColumnStretch(2, 8)
 
         layout = QtWidgets.QGridLayout()
+
+        listedprod = QtWidgets.QLabel("Prodotti inseriti")
+        layout.addWidget(listedprod, 1, 4)
+        self.listaProdotti = QtWidgets.QListWidget()
+        layout.addWidget(self.listaProdotti, 2, 4)
+
         codprod = QtWidgets.QLabel("Codice prodotto")
         layout.addWidget(codprod, 0, 0)
         self.codiceprod = QtWidgets.QTextEdit()
+        print(type(self.codiceprod))
         layout.addWidget(self.codiceprod, 0, 1)
+
         nome = QtWidgets.QLabel("Nome")
         layout.addWidget(nome, 1, 0)
-
         self.nomeprod = QtWidgets.QLineEdit()
         layout.addWidget(self.nomeprod, 1, 1)
+
         descrizione = QtWidgets.QLabel("Descrizione")
         layout.addWidget(descrizione, 2, 0)
         self.descprod = QtWidgets.QTextEdit()
         layout.addWidget(self.descprod, 2, 1)
+
         qtatot = QtWidgets.QLabel("QtaTotale")
         layout.addWidget(qtatot, 3, 0)
         self.qtatotale = QtWidgets.QSpinBox()
         layout.addWidget(self.qtatotale, 3, 1)
+
         qtaneg = QtWidgets.QLabel("QtaNegozio")
         layout.addWidget(qtaneg, 3, 2)
         self.qtanegozio = QtWidgets.QSpinBox()
         layout.addWidget(self.qtanegozio, 3, 3)
+
         qtamag = QtWidgets.QLabel("QtaMagazzino")
         layout.addWidget(qtamag, 3, 4)
         self.qtamagazzino = QtWidgets.QSpinBox()
         layout.addWidget(self.qtamagazzino, 3, 5)
+
         taglia = QtWidgets.QLabel("Taglia")
         layout.addWidget(taglia, 4, 0)
         self.tag = QtWidgets.QLineEdit()
         layout.addWidget(self.tag, 4, 1)
 
         self.df = self.load_csv()
-
 
         colore = QtWidgets.QLabel("Colore")
         layout.addWidget(colore, 4, 2)
@@ -138,6 +156,21 @@ class Window2(QDialog):
         self.codiceprod.setMaximumSize(1020, 20)
         self.codiceprod.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.buttonOK.clicked.connect(self.buttonOK_clicked)
+
+        # in update
+        if self.codiceprod is None:
+            self.codiceprod.textChanged.connect(lambda what=None: self.setPolishedText(None))
+        else:
+            self.codiceprod.textChanged.connect(lambda what=self.codiceprod: self.setPolishedText(self.codiceprod.toPlainText()))
+
+    def setPolishedText(self, codice=None):
+        if not codice:
+            pass
+        elif "\n" in codice:
+            self.codiceprod.setText(self.codiceprod.toPlainText().strip("\n").strip())
+        else:
+            pass
+
 
     def update_list(self, df, text, data):
         pd.set_option('display.max_columns', None)
@@ -398,8 +431,8 @@ class Window3(QMainWindow):  # <===
         else:
             self.line_edit.textChanged.connect(lambda what=self.line_edit: self.check_existence(what.toPlainText()))
 
-    def update_widget(self):
-        self.pandas_table = self.create_table()
+    def update_widget(self, row=None):
+        self.pandas_table = self.create_table(row)
         self.pandas_table.setGeometry(30, 30, 1020, 850)
         self.pandas_table.setBaseSize(1020, 850)
         self.line_edit = QTextEdit()
@@ -424,18 +457,34 @@ class Window3(QMainWindow):  # <===
         self.line_edit.setMinimumSize(800, 30)
         self.line_edit.setMaximumSize(1020, 30)
 
-        # in update
         if self.line_edit is None:
-            self.line_edit.textChanged.connect(lambda what=None: self.check_existence(None))
+            self.line_edit.textChanged.connect(lambda what=None: self.setPolishedText(None))
         else:
-            self.line_edit.textChanged.connect(lambda what=self.line_edit: self.check_existence(what.toPlainText()))
+            self.line_edit.textChanged.connect(lambda what=self.line_edit: self.setPolishedText(self.line_edit.toPlainText()))
 
-    def create_table(self):
+    def setPolishedText(self, codice=None):
+        if not codice:
+            pass
+        elif "\n" in codice:
+            self.line_edit.setText(self.line_edit.toPlainText().strip("\n").strip())
+            self.line_edit.textChanged.connect(lambda what=self.line_edit: self.check_existence(what.toPlainText()))
+            if len(self.line_edit.toPlainText()) > 1:
+                keyboard = Controller()
+                keyboard.press(Key.enter)
+                keyboard.release(Key.enter)
+        else:
+            pass
+
+    def create_table(self, row=None):
         # create the view
         tv = QTableView()
 
         # set the table model
-        tablemodel = PandasTable(self.load_csv())
+        if row is None:
+            tablemodel = PandasTable(self.load_csv())
+        else:
+            tablemodel = PandasTable(row)
+
         tv.setModel(tablemodel)
         tv.setBaseSize(995, 800)
         # hide grid
@@ -469,13 +518,13 @@ class Window3(QMainWindow):  # <===
             else:
                 if self.df.loc[self.df.CodiceProdotto == text].any().any():
 
-                    self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] = self.df.loc[
-                                                                                    self.df.CodiceProdotto == text, 'QtaNegozio'] - 1
+                    self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] = self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] - 1
                     if int(self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio']) < 1:
                         self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] = 0
                         '''attivare alert'''
                         QMessageBox.about(self, "ATTENZIONE", "prodotto " + text + " esaurito in negozio")
                         print(self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'])
+
                         # salva riga con alert (e prodotto relativo) in daily report
                         self.update_daily(self.df.loc[self.df.CodiceProdotto == text, 'CodiceProdotto'],
                                           self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'],
@@ -495,9 +544,10 @@ class Window3(QMainWindow):  # <===
                     # #print(self.df)
 
                     self.df.to_csv(self.mac_file_path, index=False)
-                    self.update_widget()
+                    self.update_widget(row=self.df.loc[self.df.CodiceProdotto == text])
                 else:
                     #print("codice prodotto da cambiare:", text, "tipo di dato", type(text))
+                    self.update_widget()
                     pass
 
     def load_csv(self):

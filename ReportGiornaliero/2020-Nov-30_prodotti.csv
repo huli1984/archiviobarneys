@@ -1,0 +1,5 @@
+CodiceProdotto,Nome,Descrizione,QtTotale,QtaMagazzino,QtaNegozio,Taglia,Colore,Hex,Data
+#,initialization row,no,0,0,0,,,,
+2345,dfsd,sdfsa,4,3,0,sfasdf,fasf,,2020-11-30
+4634,234,32452345,21,20,0,2345,23452,,2020-11-30
+999,gdh,fghjfg,2,1,0,sgdf,fgsdf,,2020-11-30
