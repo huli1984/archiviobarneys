@@ -56,7 +56,6 @@ class Window2(QDialog):
         self.mac_file_path = os.path.abspath(
             os.path.join(sys.executable + "/prodotti.csv", '..', '..', '..', "..", "..",
                          "prodotti.csv"))
-
         self.df = None
         self.title = "Inserisci Prodotto"
         self.top = 100
@@ -74,7 +73,6 @@ class Window2(QDialog):
         windowLayout = QVBoxLayout()
         windowLayout.addWidget(self.horizontalGroupBox)
         self.setLayout(windowLayout)
-
         self.show()
 
     def load_df(self):
@@ -85,7 +83,7 @@ class Window2(QDialog):
         df = pd.read_csv(self.mac_file_path)
         if not self.mac_file_path:
             index_list = ["CodiceProdotto", "Nome", "Descrizione", "QtTotale", "QtaMagazzino", "QtaNegozio", "Taglia",
-                          "Colore", "Hex", "Data"]
+                          "Colore", "Stagione", "Anno", "Data"]
             to_add_series = pd.Series(s_list, index=index_list)
             df.append(to_add_series, ignore_index=True)
             df.to_csv(self.mac_file_path)
@@ -98,11 +96,6 @@ class Window2(QDialog):
         layout.setColumnStretch(2, 8)
 
         layout = QtWidgets.QGridLayout()
-
-        listedprod = QtWidgets.QLabel("Prodotti inseriti")
-        layout.addWidget(listedprod, 1, 4)
-        self.listaProdotti = QtWidgets.QListWidget()
-        layout.addWidget(self.listaProdotti, 2, 4)
 
         codprod = QtWidgets.QLabel("Codice prodotto")
         layout.addWidget(codprod, 0, 0)
@@ -120,20 +113,30 @@ class Window2(QDialog):
         self.descprod = QtWidgets.QTextEdit()
         layout.addWidget(self.descprod, 2, 1)
 
-        qtatot = QtWidgets.QLabel("QtaTotale")
-        layout.addWidget(qtatot, 3, 0)
-        self.qtatotale = QtWidgets.QSpinBox()
-        layout.addWidget(self.qtatotale, 3, 1)
+        stagione = QtWidgets.QLabel("Stagione")
+        layout.addWidget(stagione, 3, 0)
+        self.stagione = QtWidgets.QLineEdit()
+        layout.addWidget(self.stagione, 3, 1)
+
+        anno = QtWidgets.QLabel("Anno")
+        layout.addWidget(anno, 0, 2)
+        self.anno = QtWidgets.QLineEdit()
+        layout.addWidget(self.anno, 0, 3)
 
         qtaneg = QtWidgets.QLabel("QtaNegozio")
-        layout.addWidget(qtaneg, 3, 2)
+        layout.addWidget(qtaneg, 1, 2)
         self.qtanegozio = QtWidgets.QSpinBox()
-        layout.addWidget(self.qtanegozio, 3, 3)
+        layout.addWidget(self.qtanegozio, 1, 3)
 
         qtamag = QtWidgets.QLabel("QtaMagazzino")
-        layout.addWidget(qtamag, 3, 4)
+        layout.addWidget(qtamag, 2, 2)
         self.qtamagazzino = QtWidgets.QSpinBox()
-        layout.addWidget(self.qtamagazzino, 3, 5)
+        layout.addWidget(self.qtamagazzino, 2, 3)
+
+        messageBox = QtWidgets.QLabel("Box Messaggi")
+        layout.addWidget(messageBox, 4, 2)
+        self.communication = QtWidgets.QLabel()
+        layout.addWidget(self.communication, 4, 3)
 
         taglia = QtWidgets.QLabel("Taglia")
         layout.addWidget(taglia, 4, 0)
@@ -143,26 +146,42 @@ class Window2(QDialog):
         self.df = self.load_csv()
 
         colore = QtWidgets.QLabel("Colore")
-        layout.addWidget(colore, 4, 2)
+        layout.addWidget(colore, 3, 2)
         self.col = QtWidgets.QLineEdit()
 
-        layout.addWidget(self.col, 4, 3)
+        layout.addWidget(self.col, 3, 3)
 
         self.buttonOK = QtWidgets.QPushButton("SALVA", self)
-        layout.addWidget(self.buttonOK, 5, 2)
+        layout.addWidget(self.buttonOK, 6, 3)
 
         self.setLayout(layout)
         self.codiceprod.setMinimumSize(80, 20)
         self.codiceprod.setMaximumSize(1020, 20)
+        self.descprod.setMinimumSize(80, 20)
+        self.descprod.setMaximumSize(1020, 100)
         self.codiceprod.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.buttonOK.clicked.connect(self.buttonOK_clicked)
 
-        # in update
+        # update ad inserimento di ogni char
+        # elimina il carattere new line \n e si attiva a stringa completa (secondo input pistola)
         if self.codiceprod is None:
             self.codiceprod.textChanged.connect(lambda what=None: self.setPolishedText(None))
         else:
             self.codiceprod.textChanged.connect(lambda what=self.codiceprod: self.setPolishedText(self.codiceprod.toPlainText()))
+            self.codiceprod.textChanged.connect(lambda what=self.codiceprod: self.warn_about_change(self.codiceprod.toPlainText()))
 
+    # funzione per segnalare a schermo la MODIFICA di un parametro o l'inserimento di una nuova voce
+    def warn_about_change(self, text):
+        if self.df.loc[self.df.CodiceProdotto == text].any().any():
+            self.communication.setText("ATTENZIONE!!!\nStai per sovrascrivere i valori\ncorrispondenti al codice prodotto\nselezionato")
+            self.communication.show()
+        else:
+            self.communication.setText(
+                "Stai inserendo una\nnuova voce nel database")
+            self.communication.show()
+
+
+    # funzione connessa al commento precedente
     def setPolishedText(self, codice=None):
         if not codice:
             pass
@@ -171,22 +190,27 @@ class Window2(QDialog):
         else:
             pass
 
-
+    # funzione update del database
+    # TODO: aggiungere field mancanti, generare output nel message box, chiedere eventualmente conferma per le mods
     def update_list(self, df, text, data):
         pd.set_option('display.max_columns', None)
         #print(df)
         if data[5].isdigit():
-            df.loc[df.CodiceProdotto == text, 'QtaNegozio'] = int(df.loc[df.CodiceProdotto == text, 'QtaNegozio']) + int(data[5])
+            df.loc[df.CodiceProdotto == text, 'QtaNegozio'] = int(
+                df.loc[df.CodiceProdotto == text, 'QtaNegozio']) * 0 + int(data[5])  # togliere il *0 per trasformare la funzione da funzione di sovrascrittura a funzione di update
         else:
-            #print("not matching int")
-            pass
+            print("not matching int")
         if data[4].isdigit():
-            df.loc[df.CodiceProdotto == text, 'QtaMagazzino'] = int(df.loc[df.CodiceProdotto == text, 'QtaMagazzino']) + int(data[4])
+            df.loc[df.CodiceProdotto == text, 'QtaMagazzino'] = int(
+                df.loc[df.CodiceProdotto == text, 'QtaMagazzino']) * 0 + int(data[4])
         else:
             print("not matching int")
             pass
-        #print(df)
-        return df
+        # aggiunte parte modifica
+        if data[1]:
+            df.loc[df.CodiceProdotto == text, 'Nome'] = str(df.loc[df.CodiceProdotto == text, data[1]])
+        else:
+            print("not matching str")
 
     def load_csv(self):
         try:
@@ -214,7 +238,7 @@ class Window2(QDialog):
                      "N/A",
                      "N/A", "N/A", "N/A"]
         index_list = ["CodiceProdotto", "Nome", "Descrizione", "QtTotale", "QtaMagazzino", "QtaNegozio", "Taglia",
-                      "Colore", "Hex", "Data"]
+                      "Colore", "Stagione", "Anno", "Data"]
 
         df = pd.DataFrame(columns=index_list)
         a_series = pd.Series(data_list, index=index_list)
@@ -241,36 +265,34 @@ class Window2(QDialog):
         print("codice prodotto", codiceprodotto)
         nomeprodotto = self.nomeprod.text()
         descprodotto = self.descprod.toPlainText()
-        qtatotprodotto = self.qtatotale.text()
+        stagione = self.stagione.text()
         qtanegprodotto = self.qtanegozio.text()
         qtamagprodotto = self.qtamagazzino.text()
         tagliaprodotto = self.tag.text()
         coloreprodotto = self.col.text()
-        hexprodotto = '' #self.col.text()
+        anno = self.anno.text()
         dataprodotto = date.today()
+        qtot = str(int(qtanegprodotto) + int(qtanegprodotto))
 
-        data_list = [codiceprodotto, nomeprodotto, descprodotto, qtatotprodotto, qtamagprodotto, qtanegprodotto,
+        data_list = [codiceprodotto, nomeprodotto, descprodotto, qtot, qtamagprodotto, qtanegprodotto,
                      tagliaprodotto,
-                     coloreprodotto, hexprodotto, dataprodotto]
+                     coloreprodotto, stagione, anno, dataprodotto]
         self.append_to_db(data_list)
-        #print(hexprodotto)
+        # print(hexprodotto)
         try:
             self.df = self.load_csv()
             if self.df.loc[self.df.CodiceProdotto == codiceprodotto].any().any():
                 self.df = self.update_list(self.df, codiceprodotto, data_list)
-                #print(self.df)
+                # print(self.df)
             else:
                 m_list = []
-                '''save the new df'''
+                # save the new df
                 index_list = ["CodiceProdotto", "Nome", "Descrizione", "QtTotale", "QtaMagazzino", "QtaNegozio",
-                              "Taglia",
-                              "Colore", "Hex", "Data"]
+                              "Taglia", "Colore", "Stagione", "Anno", "Data"]
                 a_series = pd.Series(data_list, index=self.df.columns)
                 self.df = self.df.append(a_series, ignore_index=True)
         except Exception as e:
-            #print("errore:", e)
-            #print("contattare l'amministratore")
-            pass
+            print(e)
 
         finally:
             self.df.to_csv(self.mac_file_path, index=False)
@@ -324,9 +346,9 @@ class WindowDailyReport(QMainWindow):
     def create_daily_db(self):
         data_list = ["#", "initialization row", "no", 0, 0, 0,
                      "N/A",
-                     "N/A", "N/A", "N/A"]
+                     "N/A", "N/A", "N/A", "N/A"]
         index_list = ["CodiceProdotto", "Nome", "Descrizione", "QtTotale", "QtaMagazzino", "QtaNegozio", "Taglia",
-                      "Colore", "Hex", "Data"]
+                      "Colore", "Stagione", "Anno", "Data"]
 
         df = pd.DataFrame(columns=index_list)
         a_series = pd.Series(data_list, index=index_list)
@@ -361,9 +383,6 @@ class WindowDailyReport(QMainWindow):
         # set horizontal header properties
         hh = tv.horizontalHeader()
         hh.setStretchLastSection(True)
-
-        # set column width to fit contents
-        # tv.resizeColumnsToContents()
 
         # set row height
         tv.resizeRowsToContents()
@@ -488,6 +507,7 @@ class Window3(QMainWindow):  # <===
 
         tv.setModel(tablemodel)
         tv.setBaseSize(995, 800)
+
         # hide grid
         tv.setShowGrid(False)
 
@@ -497,9 +517,6 @@ class Window3(QMainWindow):  # <===
         # set horizontal header properties
         hh = tv.horizontalHeader()
         hh.setStretchLastSection(True)
-
-        # set column width to fit contents
-        # tv.resizeColumnsToContents()
 
         # set row height
         tv.resizeRowsToContents()
@@ -542,12 +559,9 @@ class Window3(QMainWindow):  # <===
                             self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'])
 
                     pd.set_option('display.max_columns', None)
-                    # #print(self.df)
-
                     self.df.to_csv(self.mac_file_path, index=False)
                     self.update_widget(row=self.df.loc[self.df.CodiceProdotto == text])
                 else:
-                    #print("codice prodotto da cambiare:", text, "tipo di dato", type(text))
                     self.update_widget()
                     pass
 
@@ -574,9 +588,9 @@ class Window3(QMainWindow):  # <===
     def create_daily_db(self):
         data_list = ["#", "initialization row", "no", 0, 0, 0,
                      "N/A",
-                     "N/A", "N/A", "N/A"]
+                     "N/A", "N/A", "N/A", "N/A"]
         index_list = ["CodiceProdotto", "Nome", "Descrizione", "QtTotale", "QtaMagazzino", "QtaNegozio", "Taglia",
-                      "Colore", "Hex", "Data"]
+                      "Colore", "Stagione", "Anno", "Data"]
 
         df = pd.DataFrame(columns=index_list)
         a_series = pd.Series(data_list, index=index_list)
@@ -594,7 +608,6 @@ class Window3(QMainWindow):  # <===
                 df.to_csv(self.mac_daily_path, index=False)
 
     def update_daily(self, codice_prodotto, qta_negozio, qta_magazzino, df, index):
-        print("cod Prod ", codice_prodotto, "\n", "Qt Neg", qta_negozio, "\n", "Qt Mag", qta_magazzino)
         zero_series = df.iloc[index].squeeze()
         self.daily_df = self.daily_df.append(zero_series, ignore_index=True)
         self.daily_df.drop_duplicates(subset="CodiceProdotto", inplace=True)
@@ -604,9 +617,9 @@ class Window3(QMainWindow):  # <===
         if not os.path.isfile(self.mac_file_path):
             data_list = ["#", "initialization row", "no", 0, 0, 0,
                          "N/A",
-                         "N/A", "N/A", "N/A"]
+                         "N/A", "N/A", "N/A", "N/A"]
             index_list = ["CodiceProdotto", "Nome", "Descrizione", "QtTotale", "QtaMagazzino", "QtaNegozio", "Taglia",
-                          "Colore", "Hex", "Data"]
+                          "Colore", "Stagione", "Anno", "Data"]
 
             df = pd.DataFrame(columns=index_list)
             a_series = pd.Series(data_list, index=self.df.columns)
@@ -628,7 +641,6 @@ class Window3(QMainWindow):  # <===
     def on_pushButtonLoad_clicked(self):
         self.df = self.load_csv()
         # self.loadCsv()
-
 
 class Window(QMainWindow):
     def __init__(self):
@@ -669,9 +681,9 @@ class Window(QMainWindow):
         if not os.path.isfile(self.mac_file_path):
             data_list = ["#", "initialization row", "no", 0, 0, 0,
                          "N/A",
-                         "N/A", "N/A", "N/A"]
+                         "N/A", "N/A", "N/A", "N/A"]
             index_list = ["CodiceProdotto", "Nome", "Descrizione", "QtTotale", "QtaMagazzino", "QtaNegozio", "Taglia",
-                          "Colore", "Hex", "Data"]
+                          "Colore", "Stagione", "Anno", "Data"]
 
             df = pd.DataFrame(columns=index_list)
             a_series = pd.Series(data_list, index=df.columns)
