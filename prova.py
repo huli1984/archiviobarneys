@@ -419,6 +419,7 @@ class Window3(QMainWindow):  # <===
         self.layout.addWidget(self.line_edit)
         self.layout.addWidget(self.pandas_table)
         self.wid.setLayout(self.layout)
+
         self.line_edit.setMinimumSize(800, 30)
         self.line_edit.setMaximumSize(1020, 30)
         self.daily_table = QPushButton("Report Giornaliero", self)
