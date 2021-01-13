@@ -180,11 +180,28 @@ class Window2(QDialog):
         if self.df.loc[self.df.CodiceProdotto == text].any().any():
             self.communication.setText("ATTENZIONE!!!\nStai per sovrascrivere i valori\ncorrispondenti al codice prodotto\nselezionato")
             self.communication.show()
+            print(str(self.df.loc[self.df.CodiceProdotto == text, "Descrizione"]).split(" "))
+            self.nomeprod.setText(str(self.df.loc[self.df.CodiceProdotto == text, "Nome"]).split(" ")[4].split("\n")[0])
+            self.descprod.setText("\n".join(str(str(self.df.loc[self.df.CodiceProdotto == text, "Descrizione"]).split(" ")[4]).split("\n")[:-1]).replace("\\n", "\n"))
+            self.stagione.setText(str(self.df.loc[self.df.CodiceProdotto == text, "Stagione"]).split(" ")[4].split("\n")[0])
+            self.anno.setText(str(self.df.loc[self.df.CodiceProdotto == text, "Anno"]).split(" ")[4].split("\n")[0])
+            self.tag.setText(str(self.df.loc[self.df.CodiceProdotto == text, "Taglia"]).split(" ")[4].split("\n")[0])
+            self.col.setText(str(self.df.loc[self.df.CodiceProdotto == text, "Colore"]).split(" ")[4].split("\n")[0])
+            self.qtanegozio.setValue(int(str(self.df.loc[self.df.CodiceProdotto == text, "QtaNegozio"]).split(" ")[4].split("\n")[0]))
+            self.qtamagazzino.setValue(int(str(self.df.loc[self.df.CodiceProdotto == text, "QtaMagazzino"]).split(" ")[4].split("\n")[0]))
             self.security = True
         else:
             self.communication.setText(
                 "Stai inserendo una\nnuova voce nel database")
             self.communication.show()
+            self.nomeprod.setText("")
+            self.descprod.setText("")
+            self.stagione.setText("")
+            self.anno.setText("")
+            self.tag.setText("")
+            self.col.setText("")
+            self.qtanegozio.setValue(0)
+            self.qtamagazzino.setValue(0)
             self.security = False
 
     # metodo per conferma editing (non si attiva con inserimento nuova voce)
@@ -505,16 +522,21 @@ class Window3(QMainWindow):  # <===
         self.layout.addWidget(self.pandas_table)
         self.wid.setLayout(self.layout)
 
+        self.line_edit.setFocus()
         self.line_edit.setMinimumSize(800, 30)
         self.line_edit.setMaximumSize(1020, 30)
         self.daily_table = QPushButton("Report Giornaliero", self)
 
         self.daily_table.setGeometry(950, 10, 150, 30)
         self.daily_table.clicked.connect(self.windowDailyReport)
+        Keyboard = Controller()
+        Keyboard.press(Key.enter)
+        Keyboard.release(Key.enter)
 
         if self.line_edit is None:
             self.line_edit.textChanged.connect(lambda what=None: self.check_existence(None))
         else:
+            print("controllo testo:", self.line_edit.toPlainText())
             self.line_edit.textChanged.connect(lambda what=self.line_edit: self.check_existence(what.toPlainText()))
 
     def update_widget(self, row=None):
@@ -543,19 +565,23 @@ class Window3(QMainWindow):  # <===
         self.line_edit.setMinimumSize(800, 30)
         self.line_edit.setMaximumSize(1020, 30)
 
+        self.first_run = True
+
         if self.line_edit is None:
+            print("my text no codice 2:", self.line_edit.toPlainText())
             self.line_edit.textChanged.connect(lambda what=None: self.setPolishedText(None))
         else:
             self.line_edit.textChanged.connect(lambda what=self.line_edit: self.setPolishedText(self.line_edit.toPlainText()))
 
     def setPolishedText(self, codice=None):
+        keyboard = Controller()
         if not codice:
             pass
         elif "\n" in codice:
-            self.line_edit.setText(self.line_edit.toPlainText().strip("\n").strip())
+
             self.line_edit.textChanged.connect(lambda what=self.line_edit: self.check_existence(what.toPlainText()))
+            self.line_edit.setText(self.line_edit.toPlainText().strip("\n").strip())
             if len(self.line_edit.toPlainText()) > 1:
-                keyboard = Controller()
                 keyboard.press(Key.enter)
                 keyboard.release(Key.enter)
         else:
