@@ -7,7 +7,7 @@ from threading import Thread
 from pynput.keyboard import Key, Controller
 
 import pandas as pd
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtCore import QAbstractTableModel, Qt
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QLabel, QGridLayout,
                              QGroupBox, QDialog, QVBoxLayout, QTableView, QLineEdit, QTextEdit)
@@ -62,6 +62,10 @@ class Window2(QDialog):
         self.left = 100
         self.width = 680
         self.height = 500
+
+        # variable for safe save confirmation pop up
+        self.security = False
+
         self.initUI()
 
     def initUI(self):
@@ -168,6 +172,7 @@ class Window2(QDialog):
             self.codiceprod.textChanged.connect(lambda what=None: self.setPolishedText(None))
         else:
             self.codiceprod.textChanged.connect(lambda what=self.codiceprod: self.setPolishedText(self.codiceprod.toPlainText()))
+            # chiama funzione per mostrare modalita' editing o insert
             self.codiceprod.textChanged.connect(lambda what=self.codiceprod: self.warn_about_change(self.codiceprod.toPlainText()))
 
     # funzione per segnalare a schermo la MODIFICA di un parametro o l'inserimento di una nuova voce
@@ -175,10 +180,24 @@ class Window2(QDialog):
         if self.df.loc[self.df.CodiceProdotto == text].any().any():
             self.communication.setText("ATTENZIONE!!!\nStai per sovrascrivere i valori\ncorrispondenti al codice prodotto\nselezionato")
             self.communication.show()
+            self.security = True
         else:
             self.communication.setText(
                 "Stai inserendo una\nnuova voce nel database")
             self.communication.show()
+            self.security = False
+
+    # metodo per conferma editing (non si attiva con inserimento nuova voce)
+    def safe_save(self):
+        qm = QMessageBox()
+        response = qm.question(self, '', "Vuoi davvero sovrascrivere la voce già presente nel Database_", qm.Yes | qm.No)
+        if response == qm.Yes:
+            # invoca metodo per salvare contenuti
+            self.security = False
+            self.buttonOK_clicked
+            self.communication.setText("Premi SALVA per convalidare la modifica\nChiudi finestra per annullare")
+        else:
+            pass
 
 
     # funzione connessa al commento precedente
@@ -190,25 +209,62 @@ class Window2(QDialog):
         else:
             pass
 
-    # funzione update del database
+    # funzione update via MODIFICA del database
     # TODO: aggiungere field mancanti, generare output nel message box, chiedere eventualmente conferma per le mods
     def update_list(self, df, text, data):
         pd.set_option('display.max_columns', None)
         #print(df)
-        if data[5].isdigit():
+        if data[5].isdigit(): # qt Negozio
             df.loc[df.CodiceProdotto == text, 'QtaNegozio'] = int(
                 df.loc[df.CodiceProdotto == text, 'QtaNegozio']) * 0 + int(data[5])  # togliere il *0 per trasformare la funzione da funzione di sovrascrittura a funzione di update
+            df.loc[df.CodiceProdotto == text, 'QtTotale'] = int(
+                df.loc[df.CodiceProdotto == text, 'QtaNegozio']) + int(df.loc[df.CodiceProdotto == text, 'QtaMagazzino'])
         else:
             print("not matching int")
-        if data[4].isdigit():
+
+        if data[4].isdigit(): # qta Magazzino
             df.loc[df.CodiceProdotto == text, 'QtaMagazzino'] = int(
                 df.loc[df.CodiceProdotto == text, 'QtaMagazzino']) * 0 + int(data[4])
+            df.loc[df.CodiceProdotto == text, 'QtTotale'] = int(
+                df.loc[df.CodiceProdotto == text, 'QtaNegozio']) + int(
+                df.loc[df.CodiceProdotto == text, 'QtaMagazzino'])
         else:
             print("not matching int")
-            pass
-        # aggiunte parte modifica
-        if data[1]:
-            df.loc[df.CodiceProdotto == text, 'Nome'] = str(df.loc[df.CodiceProdotto == text, data[1]])
+
+        if data[1]: # nome prodotto
+            print(data[1])
+            print(df.loc[df.CodiceProdotto == text, 'Nome'])
+            df.loc[df.CodiceProdotto == text, 'Nome'] = data[1]
+        else:
+            print("not matching str")
+
+        if data[2].isalnum(): # descrizione prodotto
+            df.loc[df.CodiceProdotto == text, 'Descrizione'] = data[2]
+        else:
+            print("not matching str")
+
+        if data[6]: # taglia prodotto
+            df.loc[df.CodiceProdotto == text, 'Taglia'] = data[6]
+        else:
+            print("not matching str")
+
+        if data[7]: # colore prodotto
+            df.loc[df.CodiceProdotto == text, 'Colore'] = data[7]
+        else:
+            print("not matching str")
+
+        if data[8]: # stagione prodotto
+            df.loc[df.CodiceProdotto == text, 'Stagione'] = data[8]
+        else:
+            print("not matching str")
+
+        if data[9]: # anno prodotto
+            df.loc[df.CodiceProdotto == text, 'Anno'] = data[9]
+        else:
+            print("not matching str")
+
+        if data[10]: # data inserimento prodotto
+            df.loc[df.CodiceProdotto == text, 'Data'] = data[10]
         else:
             print("not matching str")
 
@@ -236,7 +292,7 @@ class Window2(QDialog):
     def create_daily_db(self):
         data_list = ["#", "initialization row", "no", 0, 0, 0,
                      "N/A",
-                     "N/A", "N/A", "N/A"]
+                     "N/A", "N/A", "N/A", "N/A"]
         index_list = ["CodiceProdotto", "Nome", "Descrizione", "QtTotale", "QtaMagazzino", "QtaNegozio", "Taglia",
                       "Colore", "Stagione", "Anno", "Data"]
 
@@ -259,46 +315,56 @@ class Window2(QDialog):
 
     @QtCore.pyqtSlot()
     def buttonOK_clicked(self):
-        # printing the form information
+        if self.security == False:
+            # printing the form information
 
-        codiceprodotto = self.codiceprod.toPlainText().strip()
-        print("codice prodotto", codiceprodotto)
-        nomeprodotto = self.nomeprod.text()
-        descprodotto = self.descprod.toPlainText()
-        stagione = self.stagione.text()
-        qtanegprodotto = self.qtanegozio.text()
-        qtamagprodotto = self.qtamagazzino.text()
-        tagliaprodotto = self.tag.text()
-        coloreprodotto = self.col.text()
-        anno = self.anno.text()
-        dataprodotto = date.today()
-        qtot = str(int(qtanegprodotto) + int(qtanegprodotto))
+            codiceprodotto = self.codiceprod.toPlainText().strip()
+            print("codice prodotto", codiceprodotto)
+            nomeprodotto = self.nomeprod.text()
+            descprodotto = self.descprod.toPlainText()
+            stagione = self.stagione.text()
+            qtanegprodotto = self.qtanegozio.text()
+            qtamagprodotto = self.qtamagazzino.text()
+            tagliaprodotto = self.tag.text()
+            coloreprodotto = self.col.text()
+            anno = self.anno.text()
+            dataprodotto = date.today()
+            qtot = str(int(qtanegprodotto) + int(qtanegprodotto))
 
-        data_list = [codiceprodotto, nomeprodotto, descprodotto, qtot, qtamagprodotto, qtanegprodotto,
-                     tagliaprodotto,
-                     coloreprodotto, stagione, anno, dataprodotto]
-        self.append_to_db(data_list)
-        # print(hexprodotto)
-        try:
-            self.df = self.load_csv()
-            if self.df.loc[self.df.CodiceProdotto == codiceprodotto].any().any():
-                self.df = self.update_list(self.df, codiceprodotto, data_list)
-                # print(self.df)
-            else:
-                m_list = []
-                # save the new df
-                index_list = ["CodiceProdotto", "Nome", "Descrizione", "QtTotale", "QtaMagazzino", "QtaNegozio",
-                              "Taglia", "Colore", "Stagione", "Anno", "Data"]
-                a_series = pd.Series(data_list, index=self.df.columns)
-                self.df = self.df.append(a_series, ignore_index=True)
-        except Exception as e:
-            print(e)
+            data_list = [codiceprodotto, nomeprodotto, descprodotto, qtot, qtamagprodotto, qtanegprodotto,
+                         tagliaprodotto,
+                         coloreprodotto, stagione, anno, dataprodotto]
+            self.append_to_db(data_list)
 
-        finally:
-            self.df.to_csv(self.mac_file_path, index=False)
+            try:
+                self.df = self.load_csv()
+                if self.df.loc[self.df.CodiceProdotto == codiceprodotto].any().any():
+                    # self.df = self.update_list(self.df, codiceprodotto, data_list)
+                    self.update_list(self.df, codiceprodotto, data_list)
+                    # print(self.df)
+                else:
+                    m_list = []
+                    # save the new df
+                    index_list = ["CodiceProdotto", "Nome", "Descrizione", "QtTotale", "QtaMagazzino", "QtaNegozio",
+                                  "Taglia", "Colore", "Stagione", "Anno", "Data"]
+                    a_series = pd.Series(data_list, index=self.df.columns)
+                    self.df = self.df.append(a_series, ignore_index=True)
+            except Exception as e:
+                print(e)
 
-        # closing the window
-        self.close()
+            finally:
+                try:
+                    self.df.to_csv(self.mac_file_path, index=False)
+                    self.close()
+                except Exception as e:
+                    self.communication.setText("ATTENZIONE:\ninserire dati validi\nprima di convalidare")
+                    self.communication.show()
+                    print(e)
+
+            # closing the window
+            # self.close()
+        else:
+            self.safe_save()
 
 
 class WindowDailyReport(QMainWindow):
@@ -655,20 +721,22 @@ class Window(QMainWindow):
         self.mac_file_path = os.path.abspath(
             os.path.join(sys.executable + "/prodotti.csv", "..", '..', '..', '..', '..', "prodotti.csv"))
 
-        self.pushButton = QPushButton("Inserisci", self)
+        self.pushButton = QPushButton("Inserisci / modifica", self)
         styles = """background-color: orange;
                     border-style: outset;
                     border-width: 2px;
                     border-radius: 15px;
                     border-color: #777777;
-                    padding: 4px;
+                    padding: 0px;
                     color: #777777;"""
         self.pushButton.setStyleSheet(styles)
-        self.pushButton.move(160, 200)
-        self.pushButton.setToolTip("<h3>Inserisci</h3>")
+        self.pushButton.setMinimumSize(150, 30)
+        self.pushButton.move(self.width/2 - 150/2, 200)
+        self.pushButton.setToolTip("<h3>Inserisci o modifica</h3>")
         self.pushButton.clicked.connect(self.window2)  # <===
         self.pushButton2 = QPushButton("Cerca", self)
-        self.pushButton2.move(425, 200)
+        self.pushButton2.setMinimumSize(100, 30)
+        self.pushButton2.move(self.width/2 - 100/2, 250)
         self.pushButton2.setStyleSheet(styles)
         self.pushButton2.setToolTip("<h3>Cerca</h3>")
 

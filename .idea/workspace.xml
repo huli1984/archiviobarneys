@@ -19,7 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7faee735-b179-4f6c-916e-904eb5cccf39" name="Default Changelist" comment="Finally working on receiver mac&#10;TODO: aggiungere stagione e anno&#10;Aggiungere anche nella tabella&#10;togliere hex, togliere quantita’ totale, fare semplicemnte somma&#10;&#10;TODO: implementare la modifica previa selezione dei codici prodotto gia' esistenti">
+    <list default="true" id="7faee735-b179-4f6c-916e-904eb5cccf39" name="Default Changelist" comment="Finally working on receiver mac&#10;TODO: aggiungere stagione e anno&#10;Aggiungere anche nella tabella&#10;togliere hex, togliere quantita’ totale, fare semplicemnte somma&#10;&#10;TODO: implementare la modifica previa selezione dei codici prodotto gia' esistenti&#10;&#10;WIP">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/prova.py" beforeDir="false" afterPath="$PROJECT_DIR$/prova.py" afterDir="false" />
     </list>
@@ -132,7 +132,9 @@
       <workItem from="1609283946621" duration="1510000" />
       <workItem from="1609948964803" duration="20000" />
       <workItem from="1610126296794" duration="3251000" />
-      <workItem from="1610457275566" duration="8784000" />
+      <workItem from="1610457275566" duration="8947000" />
+      <workItem from="1610544869811" duration="3933000" />
+      <workItem from="1610549357117" duration="636000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed the missing match with equal strings giving the first row a hash symbol.&#10;TODO: investigate more about the bug for a final fix">
       <created>1605211019472</created>
@@ -197,7 +199,14 @@
       <option name="project" value="LOCAL" />
       <updated>1610479423931</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Finally working on receiver mac&#10;TODO: aggiungere stagione e anno&#10;Aggiungere anche nella tabella&#10;togliere hex, togliere quantita’ totale, fare semplicemnte somma&#10;&#10;TODO: implementare la modifica previa selezione dei codici prodotto gia' esistenti&#10;&#10;WIP">
+      <created>1610487371297</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1610487371297</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -221,7 +230,8 @@
     <MESSAGE value="Fixed the missing match with equal strings giving the first row a hash symbol.&#10;TODO: investigate more about the bug for a final fix&#10;ADDED: daily report + daily report csvs saved in folder&#10;&#10;SOLVED: removed combo box for color and size" />
     <MESSAGE value="TODO: fix bug about report giornaliero button (now window must be restarted to open it)" />
     <MESSAGE value="Finally working on receiver mac&#10;TODO: aggiungere stagione e anno&#10;Aggiungere anche nella tabella&#10;togliere hex, togliere quantita’ totale, fare semplicemnte somma&#10;&#10;TODO: implementare la modifica previa selezione dei codici prodotto gia' esistenti" />
-    <option name="LAST_COMMIT_MESSAGE" value="Finally working on receiver mac&#10;TODO: aggiungere stagione e anno&#10;Aggiungere anche nella tabella&#10;togliere hex, togliere quantita’ totale, fare semplicemnte somma&#10;&#10;TODO: implementare la modifica previa selezione dei codici prodotto gia' esistenti" />
+    <MESSAGE value="Finally working on receiver mac&#10;TODO: aggiungere stagione e anno&#10;Aggiungere anche nella tabella&#10;togliere hex, togliere quantita’ totale, fare semplicemnte somma&#10;&#10;TODO: implementare la modifica previa selezione dei codici prodotto gia' esistenti&#10;&#10;WIP" />
+    <option name="LAST_COMMIT_MESSAGE" value="Finally working on receiver mac&#10;TODO: aggiungere stagione e anno&#10;Aggiungere anche nella tabella&#10;togliere hex, togliere quantita’ totale, fare semplicemnte somma&#10;&#10;TODO: implementare la modifica previa selezione dei codici prodotto gia' esistenti&#10;&#10;WIP" />
   </component>
   <component name="WindowStateProjectService">
     <state x="328" y="184" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1605558898784">
@@ -237,80 +247,80 @@
       <screen x="0" y="23" width="1920" height="1005" />
     </state>
     <state x="636" y="274" key="Github.UntrackedFilesDialog/0.23.1920.1005@0.23.1920.1005" timestamp="1605207408701" />
-    <state width="1384" height="265" key="GridCell.Tab.0.bottom" timestamp="1610487254104">
-      <screen x="0" y="23" width="1920" height="1005" />
+    <state width="1384" height="266" key="GridCell.Tab.0.bottom" timestamp="1610548948134">
+      <screen x="0" y="23" width="1920" height="1004" />
     </state>
     <state width="1865" height="265" key="GridCell.Tab.0.bottom/0.23.1920.1002@0.23.1920.1002" timestamp="1607016555090" />
-    <state width="1865" height="265" key="GridCell.Tab.0.bottom/0.23.1920.1003@0.23.1920.1003" timestamp="1609263726525" />
-    <state width="1384" height="266" key="GridCell.Tab.0.bottom/0.23.1920.1004@0.23.1920.1004" timestamp="1610486950039" />
+    <state width="1384" height="266" key="GridCell.Tab.0.bottom/0.23.1920.1003@0.23.1920.1003" timestamp="1610548938444" />
+    <state width="1384" height="266" key="GridCell.Tab.0.bottom/0.23.1920.1004@0.23.1920.1004" timestamp="1610548948134" />
     <state width="1384" height="265" key="GridCell.Tab.0.bottom/0.23.1920.1005@0.23.1920.1005" timestamp="1610487254104" />
     <state width="1865" height="266" key="GridCell.Tab.0.bottom/0.23.1920.1006@0.23.1920.1006" timestamp="1610484737042" />
     <state width="1685" height="270" key="GridCell.Tab.0.bottom/0.23.1920.997@0.23.1920.997" timestamp="1603399329341" />
-    <state width="1384" height="265" key="GridCell.Tab.0.center" timestamp="1610487254104">
-      <screen x="0" y="23" width="1920" height="1005" />
+    <state width="1384" height="266" key="GridCell.Tab.0.center" timestamp="1610548948133">
+      <screen x="0" y="23" width="1920" height="1004" />
     </state>
     <state width="1865" height="265" key="GridCell.Tab.0.center/0.23.1920.1002@0.23.1920.1002" timestamp="1607016555089" />
-    <state width="1865" height="265" key="GridCell.Tab.0.center/0.23.1920.1003@0.23.1920.1003" timestamp="1609263726525" />
-    <state width="1384" height="266" key="GridCell.Tab.0.center/0.23.1920.1004@0.23.1920.1004" timestamp="1610486950039" />
+    <state width="1384" height="266" key="GridCell.Tab.0.center/0.23.1920.1003@0.23.1920.1003" timestamp="1610548938443" />
+    <state width="1384" height="266" key="GridCell.Tab.0.center/0.23.1920.1004@0.23.1920.1004" timestamp="1610548948133" />
     <state width="1384" height="265" key="GridCell.Tab.0.center/0.23.1920.1005@0.23.1920.1005" timestamp="1610487254104" />
     <state width="1865" height="266" key="GridCell.Tab.0.center/0.23.1920.1006@0.23.1920.1006" timestamp="1610484737041" />
     <state width="1685" height="270" key="GridCell.Tab.0.center/0.23.1920.997@0.23.1920.997" timestamp="1603399329340" />
-    <state width="1384" height="265" key="GridCell.Tab.0.left" timestamp="1610487254103">
-      <screen x="0" y="23" width="1920" height="1005" />
+    <state width="1384" height="266" key="GridCell.Tab.0.left" timestamp="1610548948133">
+      <screen x="0" y="23" width="1920" height="1004" />
     </state>
     <state width="1865" height="265" key="GridCell.Tab.0.left/0.23.1920.1002@0.23.1920.1002" timestamp="1607016555089" />
-    <state width="1865" height="265" key="GridCell.Tab.0.left/0.23.1920.1003@0.23.1920.1003" timestamp="1609263726525" />
-    <state width="1384" height="266" key="GridCell.Tab.0.left/0.23.1920.1004@0.23.1920.1004" timestamp="1610486950038" />
+    <state width="1384" height="266" key="GridCell.Tab.0.left/0.23.1920.1003@0.23.1920.1003" timestamp="1610548938443" />
+    <state width="1384" height="266" key="GridCell.Tab.0.left/0.23.1920.1004@0.23.1920.1004" timestamp="1610548948133" />
     <state width="1384" height="265" key="GridCell.Tab.0.left/0.23.1920.1005@0.23.1920.1005" timestamp="1610487254103" />
     <state width="1865" height="266" key="GridCell.Tab.0.left/0.23.1920.1006@0.23.1920.1006" timestamp="1610484737041" />
     <state width="1685" height="270" key="GridCell.Tab.0.left/0.23.1920.997@0.23.1920.997" timestamp="1603399329339" />
-    <state width="1384" height="265" key="GridCell.Tab.0.right" timestamp="1610487254104">
-      <screen x="0" y="23" width="1920" height="1005" />
+    <state width="1384" height="266" key="GridCell.Tab.0.right" timestamp="1610548948134">
+      <screen x="0" y="23" width="1920" height="1004" />
     </state>
     <state width="1865" height="265" key="GridCell.Tab.0.right/0.23.1920.1002@0.23.1920.1002" timestamp="1607016555090" />
-    <state width="1865" height="265" key="GridCell.Tab.0.right/0.23.1920.1003@0.23.1920.1003" timestamp="1609263726525" />
-    <state width="1384" height="266" key="GridCell.Tab.0.right/0.23.1920.1004@0.23.1920.1004" timestamp="1610486950039" />
+    <state width="1384" height="266" key="GridCell.Tab.0.right/0.23.1920.1003@0.23.1920.1003" timestamp="1610548938444" />
+    <state width="1384" height="266" key="GridCell.Tab.0.right/0.23.1920.1004@0.23.1920.1004" timestamp="1610548948134" />
     <state width="1384" height="265" key="GridCell.Tab.0.right/0.23.1920.1005@0.23.1920.1005" timestamp="1610487254104" />
     <state width="1865" height="266" key="GridCell.Tab.0.right/0.23.1920.1006@0.23.1920.1006" timestamp="1610484737042" />
     <state width="1685" height="270" key="GridCell.Tab.0.right/0.23.1920.997@0.23.1920.997" timestamp="1603399329340" />
-    <state width="1384" height="266" key="GridCell.Tab.1.bottom" timestamp="1610486950041">
+    <state width="1384" height="266" key="GridCell.Tab.1.bottom" timestamp="1610548951535">
       <screen x="0" y="23" width="1920" height="1004" />
     </state>
-    <state width="1685" height="271" key="GridCell.Tab.1.bottom/0.23.1920.1003@0.23.1920.1003" timestamp="1604024746900" />
-    <state width="1384" height="266" key="GridCell.Tab.1.bottom/0.23.1920.1004@0.23.1920.1004" timestamp="1610486950041" />
+    <state width="1384" height="266" key="GridCell.Tab.1.bottom/0.23.1920.1003@0.23.1920.1003" timestamp="1610548938445" />
+    <state width="1384" height="266" key="GridCell.Tab.1.bottom/0.23.1920.1004@0.23.1920.1004" timestamp="1610548951535" />
     <state width="1865" height="266" key="GridCell.Tab.1.bottom/0.23.1920.1005@0.23.1920.1005" timestamp="1610484981761" />
     <state width="1865" height="266" key="GridCell.Tab.1.bottom/0.23.1920.1006@0.23.1920.1006" timestamp="1610484736964" />
-    <state width="1384" height="266" key="GridCell.Tab.1.center" timestamp="1610486950040">
+    <state width="1384" height="266" key="GridCell.Tab.1.center" timestamp="1610548951534">
       <screen x="0" y="23" width="1920" height="1004" />
     </state>
-    <state width="1685" height="271" key="GridCell.Tab.1.center/0.23.1920.1003@0.23.1920.1003" timestamp="1604024746900" />
-    <state width="1384" height="266" key="GridCell.Tab.1.center/0.23.1920.1004@0.23.1920.1004" timestamp="1610486950040" />
+    <state width="1384" height="266" key="GridCell.Tab.1.center/0.23.1920.1003@0.23.1920.1003" timestamp="1610548938445" />
+    <state width="1384" height="266" key="GridCell.Tab.1.center/0.23.1920.1004@0.23.1920.1004" timestamp="1610548951534" />
     <state width="1865" height="266" key="GridCell.Tab.1.center/0.23.1920.1005@0.23.1920.1005" timestamp="1610484981760" />
     <state width="1865" height="266" key="GridCell.Tab.1.center/0.23.1920.1006@0.23.1920.1006" timestamp="1610484736964" />
-    <state width="1384" height="266" key="GridCell.Tab.1.left" timestamp="1610486950040">
+    <state width="1384" height="266" key="GridCell.Tab.1.left" timestamp="1610548951533">
       <screen x="0" y="23" width="1920" height="1004" />
     </state>
-    <state width="1685" height="271" key="GridCell.Tab.1.left/0.23.1920.1003@0.23.1920.1003" timestamp="1604024746899" />
-    <state width="1384" height="266" key="GridCell.Tab.1.left/0.23.1920.1004@0.23.1920.1004" timestamp="1610486950040" />
+    <state width="1384" height="266" key="GridCell.Tab.1.left/0.23.1920.1003@0.23.1920.1003" timestamp="1610548938444" />
+    <state width="1384" height="266" key="GridCell.Tab.1.left/0.23.1920.1004@0.23.1920.1004" timestamp="1610548951533" />
     <state width="1865" height="266" key="GridCell.Tab.1.left/0.23.1920.1005@0.23.1920.1005" timestamp="1610484981759" />
     <state width="1865" height="266" key="GridCell.Tab.1.left/0.23.1920.1006@0.23.1920.1006" timestamp="1610484736964" />
-    <state width="1384" height="266" key="GridCell.Tab.1.right" timestamp="1610486950040">
+    <state width="1384" height="266" key="GridCell.Tab.1.right" timestamp="1610548951534">
       <screen x="0" y="23" width="1920" height="1004" />
     </state>
-    <state width="1685" height="271" key="GridCell.Tab.1.right/0.23.1920.1003@0.23.1920.1003" timestamp="1604024746900" />
-    <state width="1384" height="266" key="GridCell.Tab.1.right/0.23.1920.1004@0.23.1920.1004" timestamp="1610486950040" />
+    <state width="1384" height="266" key="GridCell.Tab.1.right/0.23.1920.1003@0.23.1920.1003" timestamp="1610548938445" />
+    <state width="1384" height="266" key="GridCell.Tab.1.right/0.23.1920.1004@0.23.1920.1004" timestamp="1610548951534" />
     <state width="1865" height="266" key="GridCell.Tab.1.right/0.23.1920.1005@0.23.1920.1005" timestamp="1610484981761" />
     <state width="1865" height="266" key="GridCell.Tab.1.right/0.23.1920.1006@0.23.1920.1006" timestamp="1610484736964" />
     <state x="465" y="193" key="SettingsEditor" timestamp="1605207135929">
       <screen x="0" y="23" width="1920" height="1005" />
     </state>
     <state x="465" y="193" key="SettingsEditor/0.23.1920.1005@0.23.1920.1005" timestamp="1605207135929" />
-    <state x="593" y="264" key="Vcs.Push.Dialog.v2" timestamp="1610479428832">
+    <state x="593" y="264" key="Vcs.Push.Dialog.v2" timestamp="1610487373449">
       <screen x="0" y="23" width="1920" height="1004" />
     </state>
     <state x="593" y="263" key="Vcs.Push.Dialog.v2/0.23.1920.1002@0.23.1920.1002" timestamp="1607015566290" />
     <state x="593" y="263" key="Vcs.Push.Dialog.v2/0.23.1920.1003@0.23.1920.1003" timestamp="1607096015588" />
-    <state x="593" y="264" key="Vcs.Push.Dialog.v2/0.23.1920.1004@0.23.1920.1004" timestamp="1610479428832" />
+    <state x="593" y="264" key="Vcs.Push.Dialog.v2/0.23.1920.1004@0.23.1920.1004" timestamp="1610487373449" />
     <state x="593" y="264" key="Vcs.Push.Dialog.v2/0.23.1920.1005@0.23.1920.1005" timestamp="1606756504580" />
     <state x="593" y="264" key="Vcs.Push.Dialog.v2/0.23.1920.1006@0.23.1920.1006" timestamp="1605561277640" />
     <state x="700" y="250" width="586" height="548" key="find.popup" timestamp="1605210728963">
@@ -339,14 +349,84 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/prova.py</url>
-          <line>540</line>
-          <option name="timeStamp" value="47" />
+          <line>339</line>
+          <option name="timeStamp" value="67" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>272</line>
+          <option name="timeStamp" value="68" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>274</line>
+          <option name="timeStamp" value="69" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>280</line>
+          <option name="timeStamp" value="70" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>279</line>
+          <option name="timeStamp" value="71" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>282</line>
+          <option name="timeStamp" value="72" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>341</line>
+          <option name="timeStamp" value="73" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>276</line>
+          <option name="timeStamp" value="74" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>277</line>
+          <option name="timeStamp" value="75" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>214</line>
+          <option name="timeStamp" value="76" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>217</line>
+          <option name="timeStamp" value="77" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>266</line>
+          <option name="timeStamp" value="78" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>352</line>
+          <option name="timeStamp" value="79" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>356</line>
+          <option name="timeStamp" value="80" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>357</line>
+          <option name="timeStamp" value="81" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/prog$prog_prova.coverage" NAME="prog_prova Coverage Results" MODIFIED="1605210738581" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/prog$python.coverage" NAME="python Coverage Results" MODIFIED="1610487254094" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/prog$python.coverage" NAME="python Coverage Results" MODIFIED="1610549395779" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
