@@ -182,19 +182,43 @@ class Window2(QDialog):
                 return i
         return 0
 
+    # sono un genio del cazzo!!!!!!!!!! questo almeno gestisce l'errore evvvvaiiii
+    def polish_unhandled_mess(self, data):
+        if " " in data:
+            data = data.split(" ")
+            data = str(" ".join(data[1:]))
+            data = data.strip()
+            return data
+        else:
+            return data
+
     # funzione per segnalare a schermo la MODIFICA di un parametro o l'inserimento di una nuova voce
     def warn_about_change(self, text):
         if self.df.loc[self.df.CodiceProdotto == text].any().any():
             self.communication.setText("ATTENZIONE!!!\nStai per sovrascrivere i valori\ncorrispondenti al codice prodotto\nselezionato")
             self.communication.show()
-            self.nomeprod.setText("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Nome"])[1:].strip().split("\n")[0:-1]))
-            self.descprod.setText("\n".join(str(str(self.df.loc[self.df.CodiceProdotto == text, "Descrizione"])[1:]).strip().split("\n")[0:-1]).replace("\\n", "\n"))
-            self.stagione.setText("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Stagione"])[1:].strip().split("\n")[0:-1]))
-            self.anno.setText("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Anno"])[1:].strip().split("\n")[0:-1]))
-            self.tag.setText("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Taglia"])[1:].strip().split("\n")[0:-1]))
-            self.col.setText("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Colore"])[1:].strip().split("\n")[0:-1]))
-            self.qtanegozio.setValue(int(float(str(str(self.df.loc[self.df.CodiceProdotto == text, "QtaNegozio"]).split("\n")[0][1:].strip()))))
-            self.qtamagazzino.setValue(int(float(str(str(self.df.loc[self.df.CodiceProdotto == text, "QtaMagazzino"]).split("\n")[0][1:].strip()))))
+            self.nomeprod.setText(self.polish_unhandled_mess("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Nome"])[1:].strip().split("\n")[0:-1])))
+            self.descprod.setText(self.polish_unhandled_mess("\n".join(str(str(self.df.loc[self.df.CodiceProdotto == text, "Descrizione"])[1:]).strip().split("\n")[0:-1]).replace("\\n", "\n")))
+            self.stagione.setText(self.polish_unhandled_mess("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Stagione"])[1:].strip().split("\n")[0:-1])))
+            self.anno.setText(self.polish_unhandled_mess("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Anno"])[1:].strip().split("\n")[0:-1])))
+            self.tag.setText(self.polish_unhandled_mess("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Taglia"])[1:].strip().split("\n")[0:-1])))
+            self.col.setText(self.polish_unhandled_mess("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Colore"])[1:].strip().split("\n")[0:-1])))
+
+            try:
+                self.qtanegozio.setValue(int(float(str(str(self.df.loc[self.df.CodiceProdotto == text, "QtaNegozio"]).split("\n")[0][1:].strip()))))
+            except ValueError as e:
+                string_with_error = str(str(self.df.loc[self.df.CodiceProdotto == text, "QtaNegozio"]).split("\n")[0][1:].strip())
+                string_with_error = string_with_error.split(" ")
+                wanted_value = int(float(string_with_error[-1]))
+                self.qtanegozio.setValue(int(float(wanted_value)))
+            try:
+                self.qtamagazzino.setValue(int(float(str(str(self.df.loc[self.df.CodiceProdotto == text, "QtaMagazzino"]).split("\n")[0][1:].strip()))))
+            except ValueError as e:
+                string_with_error = str(
+                    str(self.df.loc[self.df.CodiceProdotto == text, "QtaMagazzino"]).split("\n")[0][1:].strip())
+                string_with_error = string_with_error.split(" ")
+                wanted_value = int(float(string_with_error[-1]))
+                self.qtanegozio.setValue(int(float(wanted_value)))
             self.security = True
         else:
             self.communication.setText(
@@ -378,7 +402,8 @@ class Window2(QDialog):
 
             finally:
                 try:
-                    self.df.to_csv(self.mac_file_path, index=False, sep="|")
+                    # forse errore qui!!! TODO: fix index false
+                    self.df.to_csv(self.mac_file_path, index=False, index_label=False, sep="|")
                     self.close()
                 except Exception as e:
                     self.communication.setText("ATTENZIONE:\ninserire dati validi\nprima di convalidare")
@@ -529,23 +554,27 @@ class Window3(QMainWindow):  # <===
         self.layout.addWidget(self.pandas_table)
         self.wid.setLayout(self.layout)
 
-        '''self.daily_table = QPushButton("Report Giornaliero", self)
+        self.daily_table = QPushButton("", self)
         self.daily_table.setGeometry(950, 10, 150, 30)
-        self.daily_table.clicked.connect(self.windowDailyReport)'''
+        self.daily_table.clicked.connect(self.do_nothing)
 
         self.line_edit.setFocus()
         self.line_edit.setMinimumSize(800, 30)
         self.line_edit.setMaximumSize(1020, 30)
 
         Keyboard = Controller()
-        Keyboard.press(Key.space)
-        Keyboard.release(Key.space)
+        Keyboard.press(Key.enter)
+        Keyboard.release(Key.enter)
+
 
         if self.line_edit is None:
             self.line_edit.textChanged.connect(lambda what=None: self.check_existence(None))
         else:
             print("controllo testo:", self.line_edit.toPlainText())
             self.line_edit.textChanged.connect(lambda what=self.line_edit: self.check_existence(what.toPlainText()))
+
+    def do_nothing(self):
+        pass
 
     def update_widget(self, row=None):
         self.pandas_table = self.create_table(row)
