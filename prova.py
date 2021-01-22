@@ -45,6 +45,26 @@ class PandasTable(QAbstractTableModel):
         return None
 
 '''Classe finestra inserimento'''
+
+
+def find_error_presence(lista_data):
+    for i, item in enumerate(lista_data):
+        if " " in item:
+            opt_one = item.split(" ")[0]
+            opt_two = lista_data[i - 1].split(" ")[0]
+            if i > 0:
+                if item.split(" ")[0] == lista_data[i - 1].split(" ")[0]:
+                    pass
+                else:
+                    return False
+                return True
+            else:
+                pass
+        else:
+            return False
+
+
+
 class Window2(QDialog):
 
     def __init__(self):
@@ -185,8 +205,9 @@ class Window2(QDialog):
         return 0
 
     # sono un genio del cazzo!!!!!!!!!! questo almeno gestisce l'errore evvvvaiiii
-    def polish_unhandled_mess(self, data):
-        if " " in data:
+    def polish_unhandled_mess(self, data, error):
+        if " " in data and error:
+            data = data.replace("\\t", "")
             data = data.split(" ")
             data = str(" ".join(data[1:]))
             data = data.strip()
@@ -196,15 +217,26 @@ class Window2(QDialog):
 
     # funzione per segnalare a schermo la MODIFICA di un parametro o l'inserimento di una nuova voce
     def warn_about_change(self, text):
+        lista_data = [
+            "".join(str(self.df.loc[self.df.CodiceProdotto == text, "Nome"])[1:].strip().split("\n")[0:-1]),
+            "\n".join(str(str(self.df.loc[self.df.CodiceProdotto == text, "Descrizione"])[1:]).strip().split("\n")[
+                      0:-1]).replace("\\n", "\n"),
+            "".join(str(self.df.loc[self.df.CodiceProdotto == text, "Stagione"])[1:].strip().split("\n")[0:-1]),
+            "".join(str(self.df.loc[self.df.CodiceProdotto == text, "Anno"])[1:].strip().split("\n")[0:-1]),
+            "".join(str(self.df.loc[self.df.CodiceProdotto == text, "Taglia"])[1:].strip().split("\n")[0:-1]),
+            "".join(str(self.df.loc[self.df.CodiceProdotto == text, "Colore"])[1:].strip().split("\n")[0:-1])
+        ]
+        error_presence = find_error_presence(lista_data)
+
         if self.df.loc[self.df.CodiceProdotto == text].any().any():
             self.communication.setText("ATTENZIONE!!!\nStai per sovrascrivere i valori\ncorrispondenti al codice prodotto\nselezionato")
             self.communication.show()
-            self.nomeprod.setText(self.polish_unhandled_mess("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Nome"])[1:].strip().split("\n")[0:-1])))
-            self.descprod.setText(self.polish_unhandled_mess("\n".join(str(str(self.df.loc[self.df.CodiceProdotto == text, "Descrizione"])[1:]).strip().split("\n")[0:-1]).replace("\\n", "\n")))
-            self.stagione.setText(self.polish_unhandled_mess("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Stagione"])[1:].strip().split("\n")[0:-1])))
-            self.anno.setText(self.polish_unhandled_mess("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Anno"])[1:].strip().split("\n")[0:-1])))
-            self.tag.setText(self.polish_unhandled_mess("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Taglia"])[1:].strip().split("\n")[0:-1])))
-            self.col.setText(self.polish_unhandled_mess("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Colore"])[1:].strip().split("\n")[0:-1])))
+            self.nomeprod.setText(self.polish_unhandled_mess("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Nome"])[1:].strip().split("\n")[0:-1]), error_presence))
+            self.descprod.setText(self.polish_unhandled_mess("\n".join(str(str(self.df.loc[self.df.CodiceProdotto == text, "Descrizione"])[1:]).strip().split("\n")[0:-1]).replace("\\n", "\n"), error_presence))
+            self.stagione.setText(self.polish_unhandled_mess("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Stagione"])[1:].strip().split("\n")[0:-1]), error_presence))
+            self.anno.setText(self.polish_unhandled_mess("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Anno"])[1:].strip().split("\n")[0:-1]), error_presence))
+            self.tag.setText(self.polish_unhandled_mess("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Taglia"])[1:].strip().split("\n")[0:-1]), error_presence))
+            self.col.setText(self.polish_unhandled_mess("".join(str(self.df.loc[self.df.CodiceProdotto == text, "Colore"])[1:].strip().split("\n")[0:-1]), error_presence))
 
             try:
                 self.qtanegozio.setValue(int(float(str(str(self.df.loc[self.df.CodiceProdotto == text, "QtaNegozio"]).split("\n")[0][1:].strip()))))
