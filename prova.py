@@ -4,11 +4,13 @@ import time
 import datetime
 from datetime import date
 from threading import Thread
+
+from PyQt5.QtGui import QKeyEvent
 from pynput.keyboard import Key, Controller
 
 import pandas as pd
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtCore import QAbstractTableModel, Qt
+from PyQt5.QtCore import QAbstractTableModel, QEvent, Qt, QCoreApplication
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QLabel, QGridLayout,
                              QGroupBox, QDialog, QVBoxLayout, QTableView, QLineEdit, QTextEdit)
 from PyQt5.QtWidgets import QMessageBox
@@ -209,7 +211,10 @@ class Window2(QDialog):
             except ValueError as e:
                 string_with_error = str(str(self.df.loc[self.df.CodiceProdotto == text, "QtaNegozio"]).split("\n")[0][1:].strip())
                 string_with_error = string_with_error.split(" ")
-                wanted_value = int(float(string_with_error[-1]))
+                try:
+                    wanted_value = int(float(string_with_error[-1]))
+                except ValueError as e:
+                    wanted_value = 0
                 self.qtanegozio.setValue(int(float(wanted_value)))
             try:
                 self.qtamagazzino.setValue(int(float(str(str(self.df.loc[self.df.CodiceProdotto == text, "QtaMagazzino"]).split("\n")[0][1:].strip()))))
@@ -217,8 +222,11 @@ class Window2(QDialog):
                 string_with_error = str(
                     str(self.df.loc[self.df.CodiceProdotto == text, "QtaMagazzino"]).split("\n")[0][1:].strip())
                 string_with_error = string_with_error.split(" ")
-                wanted_value = int(float(string_with_error[-1]))
-                self.qtanegozio.setValue(int(float(wanted_value)))
+                try:
+                    wanted_value = int(float(string_with_error[-1]))
+                except ValueError as e:
+                    wanted_value = 0
+                self.qtamagazzino.setValue(int(float(wanted_value)))
             self.security = True
         else:
             self.communication.setText(
@@ -262,19 +270,36 @@ class Window2(QDialog):
         pd.set_option('display.max_columns', None)
         #print(df)
         if data[5].isdigit(): # qt Negozio
-            df.loc[df.CodiceProdotto == text, 'QtaNegozio'] = int(
-                df.loc[df.CodiceProdotto == text, 'QtaNegozio']) * 0 + int(data[5])  # togliere il *0 per trasformare la funzione da funzione di sovrascrittura a funzione di update
-            df.loc[df.CodiceProdotto == text, 'QtTotale'] = int(
-                df.loc[df.CodiceProdotto == text, 'QtaNegozio']) + int(df.loc[df.CodiceProdotto == text, 'QtaMagazzino'])
+            try:
+                updated_val = int(df.loc[df.CodiceProdotto == text, 'QtaNegozio']) * 0 + int(data[5])
+            except Exception as e:
+                updated_val = int(data[5])
+            df.loc[df.CodiceProdotto == text, 'QtaNegozio'] = updated_val # togliere il *0 per trasformare la funzione da funzione di sovrascrittura a funzione di update
+            try:
+                updated_val = int(df.loc[df.CodiceProdotto == text, 'QtaNegozio']) + int(df.loc[df.CodiceProdotto == text, 'QtaMagazzino'])
+            except Exception as e:
+                try:
+                    updated_val = int(data[5]) + int(data[4])
+                except Exception as e:
+                    updated_val = int(data[5]) + 0
+            df.loc[df.CodiceProdotto == text, 'QtTotale'] = updated_val
         else:
             print("not matching int")
 
         if data[4].isdigit(): # qta Magazzino
-            df.loc[df.CodiceProdotto == text, 'QtaMagazzino'] = int(
-                df.loc[df.CodiceProdotto == text, 'QtaMagazzino']) * 0 + int(data[4])
-            df.loc[df.CodiceProdotto == text, 'QtTotale'] = int(
-                df.loc[df.CodiceProdotto == text, 'QtaNegozio']) + int(
-                df.loc[df.CodiceProdotto == text, 'QtaMagazzino'])
+            try:
+                updated_val = int(df.loc[df.CodiceProdotto == text, 'QtaMagazzino']) * 0 + int(data[4])
+            except Exception as e:
+                updated_val = int(data[4])
+            df.loc[df.CodiceProdotto == text, 'QtaMagazzino'] = updated_val
+            try:
+                updated_val = int(df.loc[df.CodiceProdotto == text, 'QtaNegozio']) + int(df.loc[df.CodiceProdotto == text, 'QtaMagazzino'])
+            except Exception as e:
+                try:
+                    updated_val = int(data[4]) + int(data[5])
+                except Exception as e:
+                    updated_val = int(data[4]) + 0
+            df.loc[df.CodiceProdotto == text, 'QtTotale'] = updated_val
         else:
             print("not matching int")
 
@@ -387,12 +412,9 @@ class Window2(QDialog):
             try:
                 self.df = self.load_csv()
                 if self.df.loc[self.df.CodiceProdotto == codiceprodotto].any().any():
-                    # self.df = self.update_list(self.df, codiceprodotto, data_list)
                     self.update_list(self.df, codiceprodotto, data_list)
-                    # print(self.df)
                 else:
                     m_list = []
-                    # save the new df
                     index_list = ["CodiceProdotto", "Nome", "Descrizione", "QtTotale", "QtaMagazzino", "QtaNegozio",
                                   "Taglia", "Colore", "Stagione", "Anno", "Data"]
                     a_series = pd.Series(data_list, index=self.df.columns)
@@ -402,7 +424,6 @@ class Window2(QDialog):
 
             finally:
                 try:
-                    # forse errore qui!!! TODO: fix index false
                     self.df.to_csv(self.mac_file_path, index=False, index_label=False, sep="|")
                     self.close()
                 except Exception as e:
@@ -554,9 +575,9 @@ class Window3(QMainWindow):  # <===
         self.layout.addWidget(self.pandas_table)
         self.wid.setLayout(self.layout)
 
-        self.daily_table = QPushButton("", self)
+        '''self.daily_table = QPushButton("", self)
         self.daily_table.setGeometry(950, 10, 150, 30)
-        self.daily_table.clicked.connect(self.do_nothing)
+        self.daily_table.clicked.connect(self.do_nothing) #tentativo di gestire errore discutibile'''
 
         self.line_edit.setFocus()
         self.line_edit.setMinimumSize(800, 30)
@@ -566,10 +587,18 @@ class Window3(QMainWindow):  # <===
         Keyboard.press(Key.enter)
         Keyboard.release(Key.enter)
 
+        is_selected = False
 
         if self.line_edit is None:
             self.line_edit.textChanged.connect(lambda what=None: self.check_existence(None))
         else:
+            # se va un monumento me ce vo'!!!!! applica evento key press and release con enter nel text edit
+            if not is_selected:
+                is_selected = True
+                enter_event = QKeyEvent(QEvent.KeyPress, Qt.Key_Enter, Qt.NoModifier)
+                QCoreApplication.postEvent(self.line_edit, enter_event)
+                enter_event = QKeyEvent(QEvent.KeyRelease, Qt.Key_Enter, Qt.NoModifier)
+                QCoreApplication.postEvent(self.line_edit, enter_event)
             print("controllo testo:", self.line_edit.toPlainText())
             self.line_edit.textChanged.connect(lambda what=self.line_edit: self.check_existence(what.toPlainText()))
 
@@ -660,33 +689,45 @@ class Window3(QMainWindow):  # <===
         if text is None:
             pass
         else:
+            self.update_widget()
+
+            #TODO: controllare casino immondo successo durante file drag and drop
             if self.df is None:
                 self.load_df()
-                self.update_widget()
             else:
                 if self.df.loc[self.df.CodiceProdotto == text].any().any():
 
                     self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] = self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] - 1
-                    if int(self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio']) < 1:
-                        self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] = 0
-                        '''attivare alert'''
-                        QMessageBox.about(self, "ATTENZIONE", "prodotto " + text + " esaurito in negozio")
-                        print(self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'])
 
-                        # salva riga con alert (e prodotto relativo) in daily report
-                        self.update_daily(self.df.loc[self.df.CodiceProdotto == text, 'CodiceProdotto'],
-                                          self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'],
-                                          self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'],
-                                          self.df, self.df.index[self.df.CodiceProdotto == text])
+                    # handle "nan" exception
+                    try:
+                        if int(self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio']) < 1:
 
-                    self.df.loc[self.df.CodiceProdotto == text, 'QtTotale'] = self.df.loc[
-                                                                                  self.df.CodiceProdotto == text, 'QtTotale'] - 1
-                    if int(self.df.loc[self.df.CodiceProdotto == text, 'QtTotale']) != (
-                            int(self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio']) + int(
-                            self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'])):
-                        self.df.loc[self.df.CodiceProdotto == text, 'QtTotale'] = int(
-                            self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio']) + int(
-                            self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'])
+                            self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] = 0
+                            '''attivare alert'''
+                            QMessageBox.about(self, "ATTENZIONE", "prodotto " + text + " esaurito in negozio")
+                            print(self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'])
+
+                            # salva riga con alert (e prodotto relativo) in daily report
+                            self.update_daily(self.df.loc[self.df.CodiceProdotto == text, 'CodiceProdotto'],
+                                              self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'],
+                                              self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'],
+                                              self.df, self.df.index[self.df.CodiceProdotto == text])
+                    except ValueError as e:
+                        if str(self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio']).lower() == "nan":
+                            self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] = 0
+
+                    try:
+                        self.df.loc[self.df.CodiceProdotto == text, 'QtTotale'] = self.df.loc[self.df.CodiceProdotto == text, 'QtTotale'] - 1
+                        if int(self.df.loc[self.df.CodiceProdotto == text, 'QtTotale']) != (int(self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio']) + int(self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'])):
+                            self.df.loc[self.df.CodiceProdotto == text, 'QtTotale'] = int(self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio']) + int(self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'])
+                    except ValueError as e:
+                        if str(self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino']).lower() == "nan":
+                            self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino']= 0
+                        if str(self.df.loc[self.df.CodiceProdotto == text, 'QtTotale']).lower() == "nan":
+                            self.df.loc[self.df.CodiceProdotto == text, 'QtTotale'] = 0
+                        else:
+                            self.df.loc[self.df.CodiceProdotto == text, 'QtTotale'] = 0
 
                     pd.set_option('display.max_columns', None)
                     self.df.to_csv(self.mac_file_path, index=False, sep="|")
