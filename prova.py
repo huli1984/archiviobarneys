@@ -575,6 +575,9 @@ class Window3(QMainWindow):  # <===
             os.path.join(sys.executable + "ReportGiornaliero/", "..", "..", '..', '..', "ReportGiornaliero/"))
         self.mac_daily_path = os.path.abspath(
             os.path.join(sys.executable + today + "_prodotti.csv", "..", "..", '..', '..', '..', today + "_prodotti.csv"))
+        self.mac_daily_path_printable = os.path.abspath(
+            os.path.join(sys.executable + today + "_prodotti_PER-STAMPA.csv", "..", "..", '..', '..', '..',
+                         today + "_prodotti_PER-STAMPA.csv"))
         print(self.mac_daily_path)
 
         self.setWindowTitle("Cerca prodotti")
@@ -723,31 +726,51 @@ class Window3(QMainWindow):  # <===
         else:
             self.update_widget()
 
-            #TODO: controllare casino immondo successo durante file drag and drop
             if self.df is None:
                 self.load_df()
             else:
                 if self.df.loc[self.df.CodiceProdotto == text].any().any():
 
-                    self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] = self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] - 1
-
-                    # handle "nan" exception
+                    # aggiorna QtaMagazzino (prima era QtaNegozio)
                     try:
-                        if int(self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio']) < 1:
-
-                            self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] = 0
-                            '''attivare alert'''
-                            QMessageBox.about(self, "ATTENZIONE", "prodotto " + text + " esaurito in negozio")
-                            print(self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'])
-
-                            # salva riga con alert (e prodotto relativo) in daily report
-                            self.update_daily(self.df.loc[self.df.CodiceProdotto == text, 'CodiceProdotto'],
-                                              self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'],
-                                              self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'],
-                                              self.df, self.df.index[self.df.CodiceProdotto == text])
+                        self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'] = self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'] - 1
                     except ValueError as e:
-                        if str(self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio']).lower() == "nan":
-                            self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] = 0
+                        self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'] = 0
+
+                    # handle "nan" exception e attiva funzioni quando un prodotto arriva a quantita' zero in magazzino e in negozio
+                    try:
+                        if int(self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino']) < 1:
+                            '''attivare alert'''
+                            QMessageBox.about(self, "ATTENZIONE", "prodotto " + text + " esaurito in Magazzino")
+
+                            if int(self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino']) < 0:
+                                self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'] = 0
+                                # reduce QtaNegozio if QtaMagazzino is lower than 1
+
+                                try:
+                                    self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] = self.df.loc[
+                                                                                                    self.df.CodiceProdotto == text, 'QtaNegozio'] - 1
+                                    if int(self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio']) < 1:
+                                        self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] = 0
+                                        '''attivare alert'''
+                                        QMessageBox.about(self, "ATTENZIONE",
+                                                          "prodotto " + text + " esaurito in Negozio")
+
+                                except ValueError as e:
+                                    self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'] = 0
+                                    '''attivare alert'''
+                                    QMessageBox.about(self, "ATTENZIONE", "prodotto " + text + " esaurito in Negozio")
+
+                                # salva riga con alert (e prodotto relativo) in daily report
+                                # crea anche copia per la stampa aggiungendo un suffisso PER_STAMPA al file
+                                self.update_daily(self.df.loc[self.df.CodiceProdotto == text, 'CodiceProdotto'],
+                                                  self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'],
+                                                  self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'],
+                                                  self.df, self.df.index[self.df.CodiceProdotto == text], text)
+
+                    except ValueError as e:
+                        if str(self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino']).lower() == "nan":
+                            self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'] = 0
 
                     try:
                         self.df.loc[self.df.CodiceProdotto == text, 'QtTotale'] = self.df.loc[self.df.CodiceProdotto == text, 'QtTotale'] - 1
@@ -765,7 +788,7 @@ class Window3(QMainWindow):  # <===
                     self.df.to_csv(self.mac_file_path, index=False, sep="|")
                     self.update_widget(row=self.df.loc[self.df.CodiceProdotto == text])
                 else:
-                    self.update_widget()
+                    self.update_widget() # aggiorna quello che si vede a schermo
                     pass
 
     def load_csv(self):
@@ -802,19 +825,31 @@ class Window3(QMainWindow):  # <===
 
         try:
             df.to_csv(self.mac_daily_path, index=False, sep="|")
+            df.to_csv(self.mac_daily_path_printable, index=False)
         except Exception as e:
             print(self.mac_daily_folder)
             if os.path.isdir(self.mac_daily_folder):
                 df.to_csv(self.mac_daily_path, index=False, sep="|")
+                df.to_csv(self.mac_daily_path_printable, index=False)
             else:
                 os.mkdir(self.mac_daily_folder, 0o755)
                 df.to_csv(self.mac_daily_path, index=False, sep="|")
+                df.to_csv(self.mac_daily_path_printable, index=False)
 
-    def update_daily(self, codice_prodotto, qta_negozio, qta_magazzino, df, index):
+    # aggiorna la tabella del report giornaliero
+    # in caso di entry doppia ritiene l'ultima (vedere opzione keep)
+    # TODO: optimization and clean up
+    def update_daily(self, codice_prodotto, qta_negozio, qta_magazzino, df, index, text):
         zero_series = df.iloc[index].squeeze()
+
+        # correction for zero series which presents unupdated QtTotale
+        zero_series.loc['QtTotale'] = int(
+            df.loc[self.df.CodiceProdotto == text, 'QtaNegozio']) + int(
+            df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'])
         self.daily_df = self.daily_df.append(zero_series, ignore_index=True)
-        self.daily_df.drop_duplicates(subset="CodiceProdotto", inplace=True)
+        self.daily_df.drop_duplicates(subset="CodiceProdotto", inplace=True, keep="last")
         self.daily_df.to_csv(self.mac_daily_path, index=False, sep="|")
+        self.daily_df.to_csv(self.mac_daily_path_printable, index=False)
 
     def create_db(self):
         if not os.path.isfile(self.mac_file_path):
@@ -907,9 +942,7 @@ class Window(QMainWindow):
             a_series = pd.Series(data_list, index=df.columns)
             df = df.append(a_series, ignore_index=True)
             df.to_csv(self.mac_file_path, index=False, sep="|")
-            #print("initialization dir:" + self.mac_file_path)
         else:
-            #print("csv exists", self.mac_file_path)
             pass
 
     def main_window(self):
