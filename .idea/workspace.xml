@@ -19,7 +19,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7faee735-b179-4f6c-916e-904eb5cccf39" name="Default Changelist" comment="Funzionante&#10;&#10;- Invertire la riduzione da QtaNegozio a QtaMagazzino, nel pannello CERCA + diminuire quantita' negozio quando QtaMagazzino arriva a 0&#10;&#10;- Creare Report Giornaliero anche in formato &quot;Print Ready&quot;">
+    <list default="true" id="7faee735-b179-4f6c-916e-904eb5cccf39" name="Default Changelist" comment="Funzionante&#10;&#10;- Creare ritenzione in memoria per non riscrivere sempre i dati nella modalita' inserisci&#10;&#10;- Invertire la riduzione da QtaNegozio a QtaMagazzino, nel pannello CERCA + diminuire quantita' negozio quando QtaMagazzino arriva a 0 - FATTO&#10;&#10;- Creare Report Giornaliero anche in formato &quot;Print Ready&quot; - FATTO">
+      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/huli.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/prova.py" beforeDir="false" afterPath="$PROJECT_DIR$/prova.py" afterDir="false" />
     </list>
@@ -45,6 +46,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="TERMINAL_CUSTOM_COMMANDS_GOT_IT" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -153,7 +155,8 @@
       <workItem from="1611332846912" duration="3664000" />
       <workItem from="1611358325726" duration="3624000" />
       <workItem from="1611411791308" duration="2912000" />
-      <workItem from="1611756684071" duration="1009000" />
+      <workItem from="1611756684071" duration="10572000" />
+      <workItem from="1612370452797" duration="623000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed the missing match with equal strings giving the first row a hash symbol.&#10;TODO: investigate more about the bug for a final fix">
       <created>1605211019472</created>
@@ -267,7 +270,14 @@
       <option name="project" value="LOCAL" />
       <updated>1611358460583</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Funzionante&#10;&#10;- Creare ritenzione in memoria per non riscrivere sempre i dati nella modalita' inserisci&#10;&#10;- Invertire la riduzione da QtaNegozio a QtaMagazzino, nel pannello CERCA + diminuire quantita' negozio quando QtaMagazzino arriva a 0 - FATTO&#10;&#10;- Creare Report Giornaliero anche in formato &quot;Print Ready&quot; - FATTO">
+      <created>1611757782349</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1611757782350</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -296,14 +306,14 @@
     <MESSAGE value="fuck yeah" />
     <MESSAGE value="fuck yeah 2" />
     <MESSAGE value="Funzionante&#10;&#10;- Invertire la riduzione da QtaNegozio a QtaMagazzino, nel pannello CERCA + diminuire quantita' negozio quando QtaMagazzino arriva a 0&#10;&#10;- Creare Report Giornaliero anche in formato &quot;Print Ready&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Funzionante&#10;&#10;- Invertire la riduzione da QtaNegozio a QtaMagazzino, nel pannello CERCA + diminuire quantita' negozio quando QtaMagazzino arriva a 0&#10;&#10;- Creare Report Giornaliero anche in formato &quot;Print Ready&quot;" />
+    <MESSAGE value="Funzionante&#10;&#10;- Creare ritenzione in memoria per non riscrivere sempre i dati nella modalita' inserisci&#10;&#10;- Invertire la riduzione da QtaNegozio a QtaMagazzino, nel pannello CERCA + diminuire quantita' negozio quando QtaMagazzino arriva a 0 - FATTO&#10;&#10;- Creare Report Giornaliero anche in formato &quot;Print Ready&quot; - FATTO" />
+    <option name="LAST_COMMIT_MESSAGE" value="Funzionante&#10;&#10;- Creare ritenzione in memoria per non riscrivere sempre i dati nella modalita' inserisci&#10;&#10;- Invertire la riduzione da QtaNegozio a QtaMagazzino, nel pannello CERCA + diminuire quantita' negozio quando QtaMagazzino arriva a 0 - FATTO&#10;&#10;- Creare Report Giornaliero anche in formato &quot;Print Ready&quot; - FATTO" />
   </component>
   <component name="WindowStateProjectService">
     <state x="328" y="184" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1605558898784">
       <screen x="0" y="23" width="1920" height="1004" />
     </state>
     <state x="328" y="184" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1920.1004@0.23.1920.1004" timestamp="1605558898784" />
-    <state x="328" y="183" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1920.997@0.23.1920.997" timestamp="1603397991245" />
     <state x="836" y="458" key="Github.ShareDialog" timestamp="1605207365787">
       <screen x="0" y="23" width="1920" height="1005" />
     </state>
@@ -312,97 +322,93 @@
       <screen x="0" y="23" width="1920" height="1005" />
     </state>
     <state x="636" y="274" key="Github.UntrackedFilesDialog/0.23.1920.1005@0.23.1920.1005" timestamp="1605207408701" />
-    <state width="1858" height="265" key="GridCell.Tab.0.bottom" timestamp="1611757691069">
+    <state width="1858" height="265" key="GridCell.Tab.0.bottom" timestamp="1612370790065">
       <screen x="0" y="23" width="1920" height="1005" />
     </state>
-    <state width="1858" height="266" key="GridCell.Tab.0.bottom/0.23.1920.1002@0.23.1920.1002" timestamp="1611414895026" />
-    <state width="1858" height="265" key="GridCell.Tab.0.bottom/0.23.1920.1003@0.23.1920.1003" timestamp="1611757065732" />
-    <state width="1858" height="265" key="GridCell.Tab.0.bottom/0.23.1920.1004@0.23.1920.1004" timestamp="1611365959584" />
-    <state width="1858" height="265" key="GridCell.Tab.0.bottom/0.23.1920.1005@0.23.1920.1005" timestamp="1611757691069" />
+    <state width="1858" height="265" key="GridCell.Tab.0.bottom/0.23.1920.1002@0.23.1920.1002" timestamp="1611762146931" />
+    <state width="1858" height="266" key="GridCell.Tab.0.bottom/0.23.1920.1003@0.23.1920.1003" timestamp="1611773358045" />
+    <state width="1858" height="265" key="GridCell.Tab.0.bottom/0.23.1920.1004@0.23.1920.1004" timestamp="1611770411939" />
+    <state width="1858" height="265" key="GridCell.Tab.0.bottom/0.23.1920.1005@0.23.1920.1005" timestamp="1612370790065" />
     <state width="1384" height="265" key="GridCell.Tab.0.bottom/0.23.1920.1006@0.23.1920.1006" timestamp="1610660489551" />
     <state width="1384" height="266" key="GridCell.Tab.0.bottom/0.23.1920.1007@0.23.1920.1007" timestamp="1610665526177" />
     <state width="1384" height="265" key="GridCell.Tab.0.bottom/0.23.1920.1008@0.23.1920.1008" timestamp="1610664935465" />
-    <state width="1685" height="270" key="GridCell.Tab.0.bottom/0.23.1920.997@0.23.1920.997" timestamp="1603399329341" />
-    <state width="1858" height="265" key="GridCell.Tab.0.center" timestamp="1611757691068">
+    <state width="1858" height="265" key="GridCell.Tab.0.center" timestamp="1612370790064">
       <screen x="0" y="23" width="1920" height="1005" />
     </state>
-    <state width="1858" height="266" key="GridCell.Tab.0.center/0.23.1920.1002@0.23.1920.1002" timestamp="1611414895025" />
-    <state width="1858" height="265" key="GridCell.Tab.0.center/0.23.1920.1003@0.23.1920.1003" timestamp="1611757065730" />
-    <state width="1858" height="265" key="GridCell.Tab.0.center/0.23.1920.1004@0.23.1920.1004" timestamp="1611365959583" />
-    <state width="1858" height="265" key="GridCell.Tab.0.center/0.23.1920.1005@0.23.1920.1005" timestamp="1611757691068" />
+    <state width="1858" height="265" key="GridCell.Tab.0.center/0.23.1920.1002@0.23.1920.1002" timestamp="1611762146931" />
+    <state width="1858" height="266" key="GridCell.Tab.0.center/0.23.1920.1003@0.23.1920.1003" timestamp="1611773358044" />
+    <state width="1858" height="265" key="GridCell.Tab.0.center/0.23.1920.1004@0.23.1920.1004" timestamp="1611770411938" />
+    <state width="1858" height="265" key="GridCell.Tab.0.center/0.23.1920.1005@0.23.1920.1005" timestamp="1612370790064" />
     <state width="1384" height="265" key="GridCell.Tab.0.center/0.23.1920.1006@0.23.1920.1006" timestamp="1610660489550" />
     <state width="1384" height="266" key="GridCell.Tab.0.center/0.23.1920.1007@0.23.1920.1007" timestamp="1610665526176" />
     <state width="1384" height="265" key="GridCell.Tab.0.center/0.23.1920.1008@0.23.1920.1008" timestamp="1610664935464" />
-    <state width="1685" height="270" key="GridCell.Tab.0.center/0.23.1920.997@0.23.1920.997" timestamp="1603399329340" />
-    <state width="1858" height="265" key="GridCell.Tab.0.left" timestamp="1611757691068">
+    <state width="1858" height="265" key="GridCell.Tab.0.left" timestamp="1612370790064">
       <screen x="0" y="23" width="1920" height="1005" />
     </state>
-    <state width="1858" height="266" key="GridCell.Tab.0.left/0.23.1920.1002@0.23.1920.1002" timestamp="1611414895020" />
-    <state width="1858" height="265" key="GridCell.Tab.0.left/0.23.1920.1003@0.23.1920.1003" timestamp="1611757065729" />
-    <state width="1858" height="265" key="GridCell.Tab.0.left/0.23.1920.1004@0.23.1920.1004" timestamp="1611365959583" />
-    <state width="1858" height="265" key="GridCell.Tab.0.left/0.23.1920.1005@0.23.1920.1005" timestamp="1611757691068" />
+    <state width="1858" height="265" key="GridCell.Tab.0.left/0.23.1920.1002@0.23.1920.1002" timestamp="1611762146930" />
+    <state width="1858" height="266" key="GridCell.Tab.0.left/0.23.1920.1003@0.23.1920.1003" timestamp="1611773358044" />
+    <state width="1858" height="265" key="GridCell.Tab.0.left/0.23.1920.1004@0.23.1920.1004" timestamp="1611770411938" />
+    <state width="1858" height="265" key="GridCell.Tab.0.left/0.23.1920.1005@0.23.1920.1005" timestamp="1612370790064" />
     <state width="1384" height="265" key="GridCell.Tab.0.left/0.23.1920.1006@0.23.1920.1006" timestamp="1610660489549" />
     <state width="1384" height="266" key="GridCell.Tab.0.left/0.23.1920.1007@0.23.1920.1007" timestamp="1610665526176" />
     <state width="1384" height="265" key="GridCell.Tab.0.left/0.23.1920.1008@0.23.1920.1008" timestamp="1610664935464" />
-    <state width="1685" height="270" key="GridCell.Tab.0.left/0.23.1920.997@0.23.1920.997" timestamp="1603399329339" />
-    <state width="1858" height="265" key="GridCell.Tab.0.right" timestamp="1611757691069">
+    <state width="1858" height="265" key="GridCell.Tab.0.right" timestamp="1612370790065">
       <screen x="0" y="23" width="1920" height="1005" />
     </state>
-    <state width="1858" height="266" key="GridCell.Tab.0.right/0.23.1920.1002@0.23.1920.1002" timestamp="1611414895026" />
-    <state width="1858" height="265" key="GridCell.Tab.0.right/0.23.1920.1003@0.23.1920.1003" timestamp="1611757065731" />
-    <state width="1858" height="265" key="GridCell.Tab.0.right/0.23.1920.1004@0.23.1920.1004" timestamp="1611365959584" />
-    <state width="1858" height="265" key="GridCell.Tab.0.right/0.23.1920.1005@0.23.1920.1005" timestamp="1611757691069" />
+    <state width="1858" height="265" key="GridCell.Tab.0.right/0.23.1920.1002@0.23.1920.1002" timestamp="1611762146931" />
+    <state width="1858" height="266" key="GridCell.Tab.0.right/0.23.1920.1003@0.23.1920.1003" timestamp="1611773358045" />
+    <state width="1858" height="265" key="GridCell.Tab.0.right/0.23.1920.1004@0.23.1920.1004" timestamp="1611770411939" />
+    <state width="1858" height="265" key="GridCell.Tab.0.right/0.23.1920.1005@0.23.1920.1005" timestamp="1612370790065" />
     <state width="1384" height="265" key="GridCell.Tab.0.right/0.23.1920.1006@0.23.1920.1006" timestamp="1610660489550" />
     <state width="1384" height="266" key="GridCell.Tab.0.right/0.23.1920.1007@0.23.1920.1007" timestamp="1610665526177" />
     <state width="1384" height="265" key="GridCell.Tab.0.right/0.23.1920.1008@0.23.1920.1008" timestamp="1610664935464" />
-    <state width="1685" height="270" key="GridCell.Tab.0.right/0.23.1920.997@0.23.1920.997" timestamp="1603399329340" />
-    <state width="1858" height="266" key="GridCell.Tab.1.bottom" timestamp="1611414895027">
-      <screen x="0" y="23" width="1920" height="1002" />
+    <state width="1858" height="266" key="GridCell.Tab.1.bottom" timestamp="1611773358047">
+      <screen x="0" y="23" width="1920" height="1003" />
     </state>
     <state width="1858" height="266" key="GridCell.Tab.1.bottom/0.23.1920.1002@0.23.1920.1002" timestamp="1611414895027" />
-    <state width="1858" height="266" key="GridCell.Tab.1.bottom/0.23.1920.1003@0.23.1920.1003" timestamp="1611413983444" />
-    <state width="1858" height="266" key="GridCell.Tab.1.bottom/0.23.1920.1004@0.23.1920.1004" timestamp="1611334874545" />
-    <state width="1384" height="266" key="GridCell.Tab.1.bottom/0.23.1920.1005@0.23.1920.1005" timestamp="1611264178169" />
+    <state width="1858" height="266" key="GridCell.Tab.1.bottom/0.23.1920.1003@0.23.1920.1003" timestamp="1611773358047" />
+    <state width="1858" height="266" key="GridCell.Tab.1.bottom/0.23.1920.1004@0.23.1920.1004" timestamp="1611769505541" />
+    <state width="1858" height="266" key="GridCell.Tab.1.bottom/0.23.1920.1005@0.23.1920.1005" timestamp="1611769481155" />
     <state width="1865" height="266" key="GridCell.Tab.1.bottom/0.23.1920.1006@0.23.1920.1006" timestamp="1610484736964" />
     <state width="1384" height="266" key="GridCell.Tab.1.bottom/0.23.1920.1007@0.23.1920.1007" timestamp="1610665526179" />
-    <state width="1858" height="266" key="GridCell.Tab.1.center" timestamp="1611414895027">
-      <screen x="0" y="23" width="1920" height="1002" />
+    <state width="1858" height="266" key="GridCell.Tab.1.center" timestamp="1611773358046">
+      <screen x="0" y="23" width="1920" height="1003" />
     </state>
     <state width="1858" height="266" key="GridCell.Tab.1.center/0.23.1920.1002@0.23.1920.1002" timestamp="1611414895027" />
-    <state width="1858" height="266" key="GridCell.Tab.1.center/0.23.1920.1003@0.23.1920.1003" timestamp="1611413983443" />
-    <state width="1858" height="266" key="GridCell.Tab.1.center/0.23.1920.1004@0.23.1920.1004" timestamp="1611334874545" />
-    <state width="1384" height="266" key="GridCell.Tab.1.center/0.23.1920.1005@0.23.1920.1005" timestamp="1611264178168" />
+    <state width="1858" height="266" key="GridCell.Tab.1.center/0.23.1920.1003@0.23.1920.1003" timestamp="1611773358046" />
+    <state width="1858" height="266" key="GridCell.Tab.1.center/0.23.1920.1004@0.23.1920.1004" timestamp="1611769505540" />
+    <state width="1858" height="266" key="GridCell.Tab.1.center/0.23.1920.1005@0.23.1920.1005" timestamp="1611769481154" />
     <state width="1865" height="266" key="GridCell.Tab.1.center/0.23.1920.1006@0.23.1920.1006" timestamp="1610484736964" />
     <state width="1384" height="266" key="GridCell.Tab.1.center/0.23.1920.1007@0.23.1920.1007" timestamp="1610665526178" />
-    <state width="1858" height="266" key="GridCell.Tab.1.left" timestamp="1611414895026">
-      <screen x="0" y="23" width="1920" height="1002" />
+    <state width="1858" height="266" key="GridCell.Tab.1.left" timestamp="1611773358045">
+      <screen x="0" y="23" width="1920" height="1003" />
     </state>
     <state width="1858" height="266" key="GridCell.Tab.1.left/0.23.1920.1002@0.23.1920.1002" timestamp="1611414895026" />
-    <state width="1858" height="266" key="GridCell.Tab.1.left/0.23.1920.1003@0.23.1920.1003" timestamp="1611413983442" />
-    <state width="1858" height="266" key="GridCell.Tab.1.left/0.23.1920.1004@0.23.1920.1004" timestamp="1611334874544" />
-    <state width="1384" height="266" key="GridCell.Tab.1.left/0.23.1920.1005@0.23.1920.1005" timestamp="1611264178168" />
+    <state width="1858" height="266" key="GridCell.Tab.1.left/0.23.1920.1003@0.23.1920.1003" timestamp="1611773358045" />
+    <state width="1858" height="266" key="GridCell.Tab.1.left/0.23.1920.1004@0.23.1920.1004" timestamp="1611769505540" />
+    <state width="1858" height="266" key="GridCell.Tab.1.left/0.23.1920.1005@0.23.1920.1005" timestamp="1611769481153" />
     <state width="1865" height="266" key="GridCell.Tab.1.left/0.23.1920.1006@0.23.1920.1006" timestamp="1610484736964" />
     <state width="1384" height="266" key="GridCell.Tab.1.left/0.23.1920.1007@0.23.1920.1007" timestamp="1610665526178" />
-    <state width="1858" height="266" key="GridCell.Tab.1.right" timestamp="1611414895027">
-      <screen x="0" y="23" width="1920" height="1002" />
+    <state width="1858" height="266" key="GridCell.Tab.1.right" timestamp="1611773358046">
+      <screen x="0" y="23" width="1920" height="1003" />
     </state>
     <state width="1858" height="266" key="GridCell.Tab.1.right/0.23.1920.1002@0.23.1920.1002" timestamp="1611414895027" />
-    <state width="1858" height="266" key="GridCell.Tab.1.right/0.23.1920.1003@0.23.1920.1003" timestamp="1611413983444" />
-    <state width="1858" height="266" key="GridCell.Tab.1.right/0.23.1920.1004@0.23.1920.1004" timestamp="1611334874545" />
-    <state width="1384" height="266" key="GridCell.Tab.1.right/0.23.1920.1005@0.23.1920.1005" timestamp="1611264178168" />
+    <state width="1858" height="266" key="GridCell.Tab.1.right/0.23.1920.1003@0.23.1920.1003" timestamp="1611773358046" />
+    <state width="1858" height="266" key="GridCell.Tab.1.right/0.23.1920.1004@0.23.1920.1004" timestamp="1611769505541" />
+    <state width="1858" height="266" key="GridCell.Tab.1.right/0.23.1920.1005@0.23.1920.1005" timestamp="1611769481154" />
     <state width="1865" height="266" key="GridCell.Tab.1.right/0.23.1920.1006@0.23.1920.1006" timestamp="1610484736964" />
     <state width="1384" height="266" key="GridCell.Tab.1.right/0.23.1920.1007@0.23.1920.1007" timestamp="1610665526178" />
     <state x="465" y="193" key="SettingsEditor" timestamp="1605207135929">
       <screen x="0" y="23" width="1920" height="1005" />
     </state>
     <state x="465" y="193" key="SettingsEditor/0.23.1920.1005@0.23.1920.1005" timestamp="1605207135929" />
-    <state x="593" y="264" key="Vcs.Push.Dialog.v2" timestamp="1611358464044">
-      <screen x="0" y="23" width="1920" height="1004" />
+    <state x="593" y="264" key="Vcs.Push.Dialog.v2" timestamp="1611757788644">
+      <screen x="0" y="23" width="1920" height="1005" />
     </state>
     <state x="593" y="263" key="Vcs.Push.Dialog.v2/0.23.1920.1002@0.23.1920.1002" timestamp="1607015566290" />
     <state x="593" y="263" key="Vcs.Push.Dialog.v2/0.23.1920.1003@0.23.1920.1003" timestamp="1611322871594" />
     <state x="593" y="264" key="Vcs.Push.Dialog.v2/0.23.1920.1004@0.23.1920.1004" timestamp="1611358464044" />
-    <state x="593" y="264" key="Vcs.Push.Dialog.v2/0.23.1920.1005@0.23.1920.1005" timestamp="1606756504580" />
+    <state x="593" y="264" key="Vcs.Push.Dialog.v2/0.23.1920.1005@0.23.1920.1005" timestamp="1611757788644" />
     <state x="593" y="264" key="Vcs.Push.Dialog.v2/0.23.1920.1006@0.23.1920.1006" timestamp="1605561277640" />
     <state x="593" y="264" key="Vcs.Push.Dialog.v2/0.23.1920.1007@0.23.1920.1007" timestamp="1610665017027" />
     <state x="700" y="250" width="586" height="548" key="find.popup" timestamp="1605210728963">
@@ -431,8 +437,133 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/prova.py</url>
-          <line>848</line>
+          <line>931</line>
           <option name="timeStamp" value="157" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>497</line>
+          <option name="timeStamp" value="158" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>212</line>
+          <option name="timeStamp" value="159" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>239</line>
+          <option name="timeStamp" value="160" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>238</line>
+          <option name="timeStamp" value="161" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>260</line>
+          <option name="timeStamp" value="162" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>213</line>
+          <option name="timeStamp" value="163" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>214</line>
+          <option name="timeStamp" value="164" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>215</line>
+          <option name="timeStamp" value="165" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>216</line>
+          <option name="timeStamp" value="166" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>217</line>
+          <option name="timeStamp" value="167" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>219</line>
+          <option name="timeStamp" value="168" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>218</line>
+          <option name="timeStamp" value="169" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>220</line>
+          <option name="timeStamp" value="170" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>222</line>
+          <option name="timeStamp" value="171" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>225</line>
+          <option name="timeStamp" value="172" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>228</line>
+          <option name="timeStamp" value="173" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>264</line>
+          <option name="timeStamp" value="174" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>265</line>
+          <option name="timeStamp" value="175" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>240</line>
+          <option name="timeStamp" value="176" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>243</line>
+          <option name="timeStamp" value="178" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>245</line>
+          <option name="timeStamp" value="179" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>244</line>
+          <option name="timeStamp" value="180" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>242</line>
+          <option name="timeStamp" value="181" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>241</line>
+          <option name="timeStamp" value="182" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/prova.py</url>
+          <line>235</line>
+          <option name="timeStamp" value="183" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -446,6 +577,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/prog$prog_prova.coverage" NAME="prog_prova Coverage Results" MODIFIED="1605210738581" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/prog$python.coverage" NAME="python Coverage Results" MODIFIED="1611757065707" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/prog$python.coverage" NAME="python Coverage Results" MODIFIED="1612370680917" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

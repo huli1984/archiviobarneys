@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 import time
@@ -44,9 +45,6 @@ class PandasTable(QAbstractTableModel):
             return self._df.columns[col]
         return None
 
-'''Classe finestra inserimento'''
-
-
 def find_error_presence(lista_data):
     for i, item in enumerate(lista_data):
         if " " in item:
@@ -64,7 +62,7 @@ def find_error_presence(lista_data):
             return False
 
 
-
+'''Classe finestra inserimento'''
 class Window2(QDialog):
 
     def __init__(self):
@@ -88,7 +86,6 @@ class Window2(QDialog):
 
         # variable for safe save confirmation pop up
         self.security = False
-
         self.initUI()
 
     def initUI(self):
@@ -181,6 +178,12 @@ class Window2(QDialog):
         self.buttonOK = QtWidgets.QPushButton("SALVA", self)
         layout.addWidget(self.buttonOK, 6, 3)
 
+        self.buttonCopy = QtWidgets.QPushButton("COPIA DATI", self)
+        layout.addWidget(self.buttonCopy, 6, 1)
+
+        self.buttonPaste = QtWidgets.QPushButton("INCOLLA DATI", self)
+        layout.addWidget(self.buttonPaste, 6, 2)
+
         self.setLayout(layout)
         self.codiceprod.setMinimumSize(80, 20)
         self.codiceprod.setMaximumSize(1020, 20)
@@ -188,6 +191,8 @@ class Window2(QDialog):
         self.descprod.setMaximumSize(1020, 100)
         self.codiceprod.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.buttonOK.clicked.connect(self.buttonOK_clicked)
+        self.buttonCopy.clicked.connect(self.buttonCopy_clicked)
+        self.buttonPaste.clicked.connect(self.buttonPaste_clicked)
 
         # update ad inserimento di ogni char
         # elimina il carattere new line \n e si attiva a stringa completa (secondo input pistola)
@@ -203,6 +208,77 @@ class Window2(QDialog):
             if "\n" in item:
                 return i
         return 0
+
+    @QtCore.pyqtSlot()
+    def buttonCopy_clicked(self):
+        nomeprodotto = self.nomeprod.text()
+        descprodotto = self.descprod.toPlainText()
+        stagione = self.stagione.text()
+        qtanegprodotto = self.qtanegozio.text()
+        qtamagprodotto = self.qtamagazzino.text()
+        tagliaprodotto = self.tag.text()
+        coloreprodotto = self.col.text()
+        anno = self.anno.text()
+        dataprodotto = date.today()
+        qtot = str(int(qtanegprodotto) + int(qtanegprodotto))
+
+        data_file = os.path.abspath(os.path.join(sys.executable + "data.json", "..", '..', "data.json"))
+        data_dict = {"nome": nomeprodotto, "descrizione": descprodotto, "totale": qtot, "magazzino": qtamagprodotto, "negozio": qtanegprodotto, "taglia": tagliaprodotto,
+                     "colore": coloreprodotto, "stagione": stagione, "anno": anno}
+        with open(data_file, 'w') as f:
+            json.dump(data_dict, f)
+
+    @QtCore.pyqtSlot()
+    def buttonPaste_clicked(self):
+        data_file = os.path.abspath(os.path.join(sys.executable + "data.json", "..", '..', "data.json"))
+        try:
+            with open(data_file) as json_file:
+                data = json.load(json_file)
+
+            try:
+                '''lista_data = [
+                    "".join(str(data["nome"])[1:].strip().split("\n")[0:-1]),
+                    "\n".join(str(str(data["descrizione"])[1:]).strip().split("\n")[
+                              0:-1]).replace("\\n", "\n"),
+                    "".join(str(data["stagione"])[1:].strip().split("\n")[0:-1]),
+                    "".join(str(data["anno"])[1:].strip().split("\n")[0:-1]),
+                    "".join(str(data["taglia"])[1:].strip().split("\n")[0:-1]),
+                    "".join(str(data["colore"])[1:].strip().split("\n")[0:-1])
+                ]'''
+
+                lista_data = [
+                    data["nome"],
+                    data["descrizione"],
+                    data["stagione"],
+                    data["anno"],
+                    data["taglia"],
+                    data["colore"],
+                    data["negozio"],
+                    data["magazzino"]
+                ]
+                print(lista_data)
+
+                error_presence = find_error_presence(lista_data)
+                self.communication.setText(
+                    "Stai inserendo una\nnuova voce nel database")
+                self.communication.show()
+                self.nomeprod.setText(self.polish_unhandled_mess("".join(lista_data[0]), error_presence))
+                self.descprod.setText(self.polish_unhandled_mess("".join(lista_data[1]), error_presence))
+                self.stagione.setText(self.polish_unhandled_mess("".join(lista_data[2]), error_presence))
+                self.anno.setText(self.polish_unhandled_mess("".join(lista_data[3]), error_presence))
+                self.tag.setText(self.polish_unhandled_mess("".join(lista_data[4]), error_presence))
+                self.col.setText(self.polish_unhandled_mess("".join(lista_data[5]), error_presence))
+                self.qtanegozio.setValue(int(float(lista_data[6])))
+                self.qtamagazzino.setValue(int(float(lista_data[7])))
+
+                self.security = False
+                self.raise_()
+                self.activateWindow()
+            except Exception as e:
+                print(e)
+
+        except Exception as e:
+            print(e)
 
     # sono un genio del cazzo!!!!!!!!!! questo almeno gestisce l'errore evvvvaiiii
     def polish_unhandled_mess(self, data, error):
@@ -743,6 +819,7 @@ class Window3(QMainWindow):  # <===
                             '''attivare alert'''
                             QMessageBox.about(self, "ATTENZIONE", "prodotto " + text + " esaurito in Magazzino")
 
+                            # Qui evita lo scalo da negozio quando magazzino raggiunge zero la prima volta
                             if int(self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino']) < 0:
                                 self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'] = 0
                                 # reduce QtaNegozio if QtaMagazzino is lower than 1
@@ -761,12 +838,12 @@ class Window3(QMainWindow):  # <===
                                     '''attivare alert'''
                                     QMessageBox.about(self, "ATTENZIONE", "prodotto " + text + " esaurito in Negozio")
 
-                                # salva riga con alert (e prodotto relativo) in daily report
+                                # salva riga con alert (e prodotto relativo) in daily report - cambiato di posizione per salvare Report per ogni interazione
                                 # crea anche copia per la stampa aggiungendo un suffisso PER_STAMPA al file
-                                self.update_daily(self.df.loc[self.df.CodiceProdotto == text, 'CodiceProdotto'],
+                                '''self.update_daily(self.df.loc[self.df.CodiceProdotto == text, 'CodiceProdotto'],
                                                   self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'],
                                                   self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'],
-                                                  self.df, self.df.index[self.df.CodiceProdotto == text], text)
+                                                  self.df, self.df.index[self.df.CodiceProdotto == text], text)'''
 
                     except ValueError as e:
                         if str(self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino']).lower() == "nan":
@@ -787,6 +864,12 @@ class Window3(QMainWindow):  # <===
                     pd.set_option('display.max_columns', None)
                     self.df.to_csv(self.mac_file_path, index=False, sep="|")
                     self.update_widget(row=self.df.loc[self.df.CodiceProdotto == text])
+
+                    # update daily spostato per avere sempre inserimento nel DB report di ogni modifica operata dal cliente
+                    self.update_daily(self.df.loc[self.df.CodiceProdotto == text, 'CodiceProdotto'],
+                                      self.df.loc[self.df.CodiceProdotto == text, 'QtaNegozio'],
+                                      self.df.loc[self.df.CodiceProdotto == text, 'QtaMagazzino'],
+                                      self.df, self.df.index[self.df.CodiceProdotto == text], text)
                 else:
                     self.update_widget() # aggiorna quello che si vede a schermo
                     pass
